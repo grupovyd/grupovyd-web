@@ -1,0 +1,1327 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Grupo V&D</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<header>
+
+    <nav class="navbar">
+
+    <div class="logo">
+        <img src="imagenes/logo/logo-vyd.png" alt="Grupo V&D">
+    </div>
+
+    <button class="menu-toggle" id="menuToggle">
+
+    <span></span>
+    <span></span>
+    <span></span>
+
+    </button>
+
+    <ul class="menu">
+        <li><a href="#hero">Inicio</a></li>
+        <li><a href="#nosotros">Nosotros</a></li>
+        <li><a href="#servicios">Servicios</a></li>
+        <li><a href="#portafolio">Portafolio</a></li>
+        <li><a href="#ferias">Ferias</a></li>
+        <li><a href="#clientes">Clientes</a></li>
+        <li><a href="#contacto">Contacto</a></li>
+    </ul>
+
+    <a href="#" class="btn-navbar" id="abrirModal">
+    Solicitar Cotización
+    </a>
+
+</nav>
+
+</header>
+
+<main>
+
+    <section id="hero">
+
+    <div class="hero-slider">
+
+        <div class="hero-slide-content">
+
+            <h1 id="hero-title">
+                DISEÑAMOS
+            </h1>
+
+            <p id="hero-subtitle">
+                Diseños estratégicos para ferias y exposiciones.
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="hero-form">
+
+    <h2>Solicita tu Cotización</h2>
+
+    <p>
+        Cuéntanos sobre tu proyecto y te contactaremos.
+    </p>
+
+    <form id="formHero">
+
+        <!-- HONEYPOT ANTI-BOT -->
+
+        <input
+            type="text"
+            name="website"
+            tabindex="-1"
+            autocomplete="off"
+            class="campo-web"
+        >
+
+
+        <!-- Nombre -->
+
+        <input
+            type="text"
+            name="nombre"
+            placeholder="Nombre completo"
+            required
+        >
+
+
+        <!-- Empresa y RUC -->
+
+        <div class="form-row">
+
+            <input
+                type="text"
+                name="empresa"
+                placeholder="Empresa"
+                required
+            >
+
+            <input
+                type="text"
+                name="ruc"
+                placeholder="RUC"
+                maxlength="11"
+                pattern="[0-9]{11}"
+                inputmode="numeric"
+                required
+            >
+
+        </div>
+
+
+        <!-- Correo y Teléfono -->
+
+        <div class="form-row">
+
+            <input
+                type="email"
+                name="correo"
+                placeholder="Correo"
+                required
+            >
+
+            <input
+                type="tel"
+                name="telefono"
+                placeholder="Teléfono"
+                pattern="[0-9]{9}"
+                maxlength="9"
+                required
+            >
+
+        </div>
+
+
+        <!-- Feria y Tipo de Stand -->
+
+        <div class="form-row">
+
+            <input
+                type="text"
+                name="feria"
+                placeholder="Feria"
+                required
+            >
+
+            <div class="campo-stand">
+
+                <select name="tipoStand" required>
+
+                    <option value="" selected disabled>
+                        Tipo de Stand
+                    </option>
+
+                    <option>Isla</option>
+
+                    <option>Cabeza de Isla</option>
+
+                    <option>Esquina</option>
+
+                    <option>Lateral</option>
+
+                    <option>No definido</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- Medidas y Presupuesto -->
+
+        <div class="form-row">
+
+            <div class="campo-medida">
+
+                <input
+                    type="text"
+                    id="medida"
+                    name="medidas"
+                    placeholder="Ej.: 4x3x3"
+                    required
+                >
+
+                <div class="ayuda-medida">
+
+                    <strong>Medidas del stand</strong>
+
+                    <br><br>
+
+                    Ingrese:
+
+                    <strong>Ancho × Largo × Alto</strong>
+
+                    <br><br>
+
+                    Ejemplo:
+
+                    <strong>4 × 3 × 3 metros</strong>
+
+                </div>
+
+            </div>
+
+
+            <div class="campo-columna">
+
+                <select name="presupuesto" required>
+
+                    <option value="" selected disabled>
+                        Presupuesto
+                    </option>
+
+                    <option>Menos de US$ 2,000</option>
+
+                    <option>US$ 2,000 - US$ 5,000</option>
+
+                    <option>US$ 5,000 - US$ 10,000</option>
+
+                    <option>Más de US$ 10,000</option>
+
+                    <option>Aún no definido</option>
+
+                </select>
+
+            </div>
+
+        </div>
+
+
+        <!-- Comentarios -->
+
+        <textarea
+            name="comentarios"
+            placeholder="Comentarios adicionales (opcional)"
+            rows="5"
+        ></textarea>
+
+
+        <button type="submit">
+
+            Enviar Solicitud
+
+        </button>
+
+    </form>
+
+</div>
+
+</section>
+
+    <section id="nosotros">
+
+    <div class="nosotros-container">
+
+        <div class="nosotros-info">
+
+            <span class="subtitulo">
+                SOBRE NOSOTROS
+            </span>
+
+            <h2>
+                Más de 20 años creando experiencias feriales
+            </h2>
+
+            <p>
+                En Grupo V&D diseñamos, fabricamos e implementamos stands para ferias, exposiciones y eventos corporativos.
+            </p>
+
+            <p>
+                Integramos estrategia, diseño, producción y montaje para desarrollar espacios que potencian la presencia de cada marca.
+            </p>
+
+            <ul>
+
+                <li>✓ Diseño y visualización 3D</li>
+
+                <li>✓ Producción propia</li>
+
+                <li>✓ Montaje especializado</li>
+
+                <li>✓ Cobertura nacional</li>
+
+            </ul>
+
+            <a href="#" class="btn-nosotros" id="abrirModalNosotros">
+            Solicitar Cotización
+            </a>
+
+        </div>
+
+        <div class="nosotros-imagen">
+
+            <img src="imagenes/nosotros/tlv.png" alt="Grupo V&D">
+
+        </div>
+
+    </div>
+
+</section>
+
+    <section id="servicios">
+
+    <div class="titulo-seccion">
+
+        <span>NUESTROS SERVICIOS</span>
+
+        <h2>Soluciones integrales para ferias y exposiciones</h2>
+
+    </div>
+
+    <div class="servicios-grid">
+
+        <div class="servicio-card">
+
+        <img src="imagenes/servicios/diseño3d.jpg" alt="Diseño 3D">
+
+        <h3>Diseño 3D</h3>
+
+        <p>
+        Conceptualización y visualización de stands personalizados para cada proyecto.
+        </p>
+
+    </div>
+
+        <div class="servicio-card">
+
+            <img src="imagenes/servicios/produccion.jpg" alt="Producción">
+
+            <h3>Producción</h3>
+
+            <p>
+                Fabricación de estructuras, mobiliario y elementos gráficos con altos estándares de calidad.
+            </p>
+
+        </div>
+
+        <div class="servicio-card">
+
+            <img src="imagenes/servicios/montaje.jpg" alt="Montaje">            
+            
+            <h3>Montaje</h3>
+
+            <p>
+                Implementación y supervisión completa en ferias, eventos y exposiciones.
+            </p>
+
+        </div>
+
+        <div class="servicio-card">
+
+            <img src="imagenes/servicios/gestion.jpg" alt="Gestión Integral">
+            
+            <h3>Gestión Integral</h3>
+
+            <p>
+                Coordinación de cada etapa del proyecto para garantizar una ejecución exitosa.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+    <section id="portafolio">
+
+    <div class="titulo-seccion">
+
+        <span>NUESTRO PORTAFOLIO</span>
+
+        <h2>Proyectos que destacan en las principales ferias del país</h2>
+
+    </div>
+
+    <div class="portafolio-slider">
+
+        <button class="portafolio-prev">
+
+            <i class="fa-solid fa-chevron-left"></i>
+
+        </button>
+
+        <div class="portafolio-viewport">
+
+            <div class="portafolio-track">
+
+                <!--========================
+                PÁGINA 1
+                ========================-->
+
+                    <!-- SERVINGSA -->
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/1servingsa.png" alt="SERVINGSA">
+
+                        <div class="portafolio-info">
+
+                            <h3>SERVINGSA</h3>
+
+                        </div>
+
+                    </div>
+
+                    <!-- GAMMAVET -->
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/2gammavet.png" alt="GAMMAVET">
+
+                        <div class="portafolio-info">
+
+                            <h3>GAMMAVET</h3>
+
+                        </div>
+
+                    </div>
+
+                    <!-- MASTERCOL -->
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/3mastercol.png" alt="MASTERCOL">
+
+                        <div class="portafolio-info">
+
+                            <h3>MASTERCOL</h3>
+
+                        </div>
+
+                    </div>
+
+                    <!-- PANDERO -->
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/4pandero.jpeg" alt="Pandero">
+
+                        <div class="portafolio-info">
+
+                            <h3>Pandero</h3>
+
+                        </div>
+
+                    </div>
+
+                    <!-- TER -->
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/5ter.png" alt="TER">
+
+                        <div class="portafolio-info">
+
+                            <h3>TER</h3>
+
+                        </div>
+
+                    </div>
+
+                    <!-- BIOMONT -->
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/6biomont.jpg" alt="BIOMONT">
+
+                        <div class="portafolio-info">
+
+                            <h3>BIOMONT</h3>
+
+                        </div>
+
+                    </div>
+
+                <!--========================
+                PÁGINA 2
+                ========================-->
+
+                    <!-- AUSTRALIA -->
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/7australia2024.jpg" alt="AUSTRALIA">
+
+                        <div class="portafolio-info">
+
+                            <h3>AUSTRALIA</h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/8exotic.jpg" alt="EXOTIC KINGDOM">
+
+                        <div class="portafolio-info">
+
+                            <h3>EXOTIC KINGDOM</h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/9brouwer.jpg" alt="BROUWER">
+
+                        <div class="portafolio-info">
+
+                            <h3>BROUWER</h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/10comercio&cia.jpg" alt="COMERCIO & CIA">
+
+                        <div class="portafolio-info">
+
+                            <h3>COMERCIO & CIA</h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/11hidrostal.jpg" alt="HIDROSTAL">
+
+                        <div class="portafolio-info">
+
+                            <h3>HIDROSTAL</h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/12METALTECNICA.png" alt="METAL TECNICA">
+
+                        <div class="portafolio-info">
+
+                            <h3>METAL TECNICA</h3>
+
+                        </div>
+
+                    </div>   
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/13A&B.jpeg" alt="A&B">
+
+                        <div class="portafolio-info">
+
+                            <h3>A&B</h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/14battilana.jpg" alt="BATTILANA">
+
+                        <div class="portafolio-info">
+
+                            <h3>BATTILANA</h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/15dasal.png" alt="DASAL">
+
+                        <div class="portafolio-info">
+
+                            <h3>DASAL</h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/16esenttia2.jpg" alt="ESENTTIA">
+
+                        <div class="portafolio-info">
+
+                            <h3>ESENTTIA</h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/17INCO.jpg" alt="INCO">
+
+                        <div class="portafolio-info">
+
+                            <h3>INCO</h3>
+
+                        </div>
+
+                    </div>
+
+                    <div class="portafolio-card">
+
+                        <img src="imagenes/portafolio/18menorca.jpg" alt="MENORCA">
+
+                        <div class="portafolio-info">
+
+                            <h3>MENORCA</h3>
+
+                        </div>
+
+                    </div>
+
+                    <!--
+                    Aquí irán los proyectos 7 al 12.
+
+                    Simplemente copias una tarjeta como las de arriba,
+                    cambias la imagen, nombre, feria y medidas,
+                    hasta completar otras seis.
+                    -->
+
+                </div>
+
+            </div>
+
+        <button class="portafolio-next">
+
+            <i class="fa-solid fa-chevron-right"></i>
+
+        </button>
+
+        </div>
+
+    </div>
+
+    <div class="portafolio-dots">
+
+        <span class="active"></span>
+
+        <span></span>
+
+        <span></span>
+
+    </div>
+
+</section>
+
+<section id="ferias">
+
+    <div class="ferias-container">
+
+        <div class="ferias-info">
+
+            <span>NUESTRA EXPERIENCIA</span>
+
+            <h2>
+                Hemos participado en las principales ferias
+                del Perú.
+            </h2>
+
+            <p>
+                Durante más de dos décadas hemos desarrollado
+                proyectos para empresas nacionales e internacionales,
+                participando en los eventos feriales más importantes
+                de la región.
+            </p>
+
+            <button id="abrirFerias" class="btn-ferias">
+                Ver todas
+            </button>
+
+        </div>
+
+        <div class="ferias-grid">
+
+            <img src="imagenes/ferias/gris/perumin.png" alt="PERUMIN">
+
+            <img src="imagenes/ferias/gris/expomina.png" alt="EXPOMINA">
+
+            <img src="imagenes/ferias/gris/expoalimentaria.png" alt="EXPOALIMENTARIA">
+
+            <img src="imagenes/ferias/gris/fimm.png" alt="FIMM">
+
+            <img src="imagenes/ferias/gris/amevea.png" alt="AMEVEA">
+
+            <img src="imagenes/ferias/gris/nexoinmobiliario.png" alt="NEXO">
+
+            <img src="imagenes/ferias/gris/agriexpo.png" alt="AGRIEXPO">
+
+            <img src="imagenes/ferias/gris/excon.png" alt="EXCON">
+
+            <img src="imagenes/ferias/gris/expodetalles.png" alt="EXPODETALLES">
+
+        </div>
+
+    </div>
+
+</section>
+
+    <section id="clientes">
+
+    <div class="clientes-header">
+
+        <span>NUESTROS CLIENTES</span>
+
+        <h2>
+
+           Empresas que confiaron
+           <br>
+
+           en <span>Grupo V&amp;D</span>
+
+        </h2>
+
+        <p>
+            Más de 20 años desarrollando proyectos para empresas
+            líderes del Perú.
+        </p>
+
+    </div>
+
+    <div class="clientes-slider">
+
+        <div class="clientes-track">
+
+            <!-- Primera copia -->
+            <img src="imagenes/clientes/agrofresh.png" alt="AgroFresh">
+            <img src="imagenes/clientes/alphatec.png" alt="Alphatec">
+            <img src="imagenes/clientes/exoticking.png" alt="Exotic Kingdom">
+            <img src="imagenes/clientes/farmagro.png" alt="Farmagro">
+            <img src="imagenes/clientes/growth.png" alt="Growth">
+            <img src="imagenes/clientes/kokosflora.png" alt="Kokosflora">
+            <img src="imagenes/clientes/makita.png" alt="Makita">
+            <img src="imagenes/clientes/menorca.png" alt="Menorca">
+            <img src="imagenes/clientes/metaltecnica.png" alt="Metal Técnica">
+            <img src="imagenes/clientes/pandero.png" alt="Pandero">
+            <img src="imagenes/clientes/pegafan.png" alt="Pegafan">
+            <img src="imagenes/clientes/pilot.png" alt="Pilot">
+            <img src="imagenes/clientes/resetelectronica.png" alt="Reset Electónica">
+        
+            <!-- Segunda copia -->
+            <img src="imagenes/clientes/agrofresh.png" alt="AgroFresh">
+            <img src="imagenes/clientes/alphatec.png" alt="Alphatec">
+            <img src="imagenes/clientes/exoticking.png" alt="Exotic Kingdom">
+            <img src="imagenes/clientes/farmagro.png" alt="Farmagro">
+            <img src="imagenes/clientes/growth.png" alt="Growth">
+            <img src="imagenes/clientes/kokosflora.png" alt="Kokosflora">
+            <img src="imagenes/clientes/makita.png" alt="Makita">
+            <img src="imagenes/clientes/menorca.png" alt="Menorca">
+            <img src="imagenes/clientes/metaltecnica.png" alt="Metal Técnica">
+            <img src="imagenes/clientes/pandero.png" alt="Pandero">
+            <img src="imagenes/clientes/pegafan.png" alt="Pegafan">
+            <img src="imagenes/clientes/pilot.png" alt="Pilot">
+            <img src="imagenes/clientes/resetelectronica.png" alt="Reset Electónica">
+
+        </div>
+
+    </div>
+
+</section>
+
+    <section id="contacto">
+
+    <div class="contacto-container">
+
+        <!-- =======================
+        COLUMNA IZQUIERDA
+        ======================== -->
+
+        <div class="contacto-left">
+
+            <span class="contacto-subtitulo">
+                CONTÁCTANOS
+            </span>
+
+            <h2>
+                Estamos listos para hacer realidad tu próximo proyecto ferial.
+            </h2>
+
+            <p>
+
+                Cuéntanos tu idea y nuestro equipo te ayudará
+                a crear experiencias que destacan y generan
+                resultados.
+
+            </p>
+
+            <a
+                href="#"
+                class="btn-contacto"
+                id="abrirModalContacto">
+
+                Solicitar Cotización
+
+            </a>
+
+        </div>
+
+        <!-- =======================
+        COLUMNA DERECHA
+        ======================== -->
+
+        <div class="contacto-right">
+
+            <!-- TARJETA -->
+
+            <div class="contacto-card">
+
+                <div class="contacto-grid">
+
+                    <div class="contacto-item">
+
+                        <div class="icono-contacto">
+
+                           <i class="fa-solid fa-location-dot"></i>
+
+                        </div>
+
+                        <h3>Oficina</h3>
+
+                        <p>
+                            Villa El Salvador<br>
+                            Lima - Perú
+                        </p>
+
+                    </div>
+
+                    <div class="contacto-item">
+
+                        <div class="icono-contacto">
+
+                            <i class="fa-solid fa-phone"></i>
+
+                        </div>
+
+                        <h3>Teléfono</h3>
+
+                        <p>+51 922 116 123</p>
+
+                        <small>Llámanos ahora</small>
+
+                    </div>
+
+                    <div class="contacto-item">
+
+                        <div class="icono-contacto">
+
+                            <i class="fa-solid fa-envelope"></i>
+
+                        </div>
+
+                        <h3>Correo</h3>
+
+                        <p>comercial@grupovyd.com.pe</p>
+
+                        <small>Escríbenos</small>
+
+                    </div>
+
+                    <div class="contacto-item">
+
+                        <div class="icono-contacto">
+
+                            <i class="fa-regular fa-clock"></i>
+
+                        </div>
+
+                        <h3>Horario</h3>
+
+                        <p>
+
+                            Lunes a Viernes
+
+                            <br>
+
+                            8:00 am – 6:00 pm
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <!-- REDES -->
+
+            <div class="contacto-social">
+
+                <h4>SÍGUENOS EN REDES</h4>
+
+                <div class="social-links">
+
+                    <a href="https://www.facebook.com/grupovyd" target="_blank" rel="noopener noreferrer">
+
+                        <span>
+
+                        <i class="fa-brands fa-facebook-f"></i>
+
+                        </span>
+
+                        Facebook
+
+                    </a>
+
+                    <a href="https://www.instagram.com/grupo_vyd" target="_blank" rel="noopener noreferrer">
+
+                        <span>
+
+                        <i class="fa-brands fa-instagram"></i>
+
+                        </span>
+
+                        Instagram
+
+                    </a>
+
+                    <a href="https://pe.linkedin.com/company/stands-m-dulos-ferias" target="_blank" rel="noopener noreferrer">
+
+                        <span>
+
+                        <i class="fa-brands fa-linkedin-in"></i>
+
+                        </span>
+
+                        LinkedIn
+
+                    </a>
+
+                    <a href="https://www.tiktok.com/@isabel.vydstands?_r=1&_t=ZS-980R8SvwyxR" target="_blank" rel="noopener noreferrer">
+
+                        <span>
+
+                        <i class="fa-brands fa-tiktok"></i>
+
+                        </span>
+
+                        TikTok
+
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</main>
+
+<footer id="footer">
+
+    <div class="footer-contenido">
+
+        <p>
+
+            &copy; 2026
+
+            <strong>GRUPO V&D MODULARQ S.A.C.</strong>
+
+            <span>|</span>
+
+            RUC: 20602213707
+
+            <span>|</span>
+
+            Todos los derechos reservados
+
+            <span>|</span>
+
+            Lima, Perú
+
+        </p>
+
+    </div>
+
+</footer>
+
+<a
+    href="https://wa.me/51922116123"
+    class="whatsapp-float"
+    target="_blank"
+>
+    <img
+        src="imagenes/iconos/whatsapp.webp"
+        alt="WhatsApp"
+    >
+</a>
+
+<div id="modalCotizacion" class="modal">
+
+    <div class="modal-contenido">
+
+        <span class="cerrar-modal">&times;</span>
+
+        <div class="modal-form">
+
+            <h2>Solicita tu Cotización</h2>
+
+            <p>
+                Cuéntanos sobre tu proyecto y te contactaremos.
+            </p>
+
+            <form id="formModal">
+
+                <input
+                    type="text"
+                    name="website"
+                    tabindex="-1"
+                    autocomplete="off"
+                    class="campo-web"
+                >
+
+                <input
+                    type="text"
+                    name="nombre"
+                    placeholder="Nombre completo"
+                    required
+                >
+
+                <div class="form-row">
+
+                    <input
+                        type="text"
+                        name="empresa"
+                        placeholder="Empresa"
+                        required
+                    >
+
+                    <input
+                        type="text"
+                        name="ruc"
+                        placeholder="RUC"
+                        maxlength="11"
+                        pattern="[0-9]{11}"
+                        inputmode="numeric"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-row">
+
+                    <input
+                        type="email"
+                        name="correo"
+                        placeholder="Correo"
+                        required
+                    >
+
+                    <input
+                        type="tel"
+                        name="telefono"
+                        placeholder="Teléfono"
+                        maxlength="9"
+                        pattern="[0-9]{9}"
+                        required
+                    >
+
+                </div>
+
+                <div class="form-row">
+
+                    <input
+                        type="text"
+                        name="feria"
+                        placeholder="Feria"
+                        required
+                    >
+
+                    <div class="campo-stand">
+
+                        <select name="tipoStand" required>
+
+                            <option value="" selected disabled>
+                                Tipo de Stand
+                            </option>
+
+                            <option>Isla</option>
+                            <option>Cabeza de Isla</option>
+                            <option>Esquina</option>
+                            <option>Lateral</option>
+                            <option>No definido</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <div class="form-row">
+
+                    <div class="campo-medida">
+
+                        <input
+                            type="text"
+                            name="medidas"
+                            placeholder="Ej.: 4x3x3"
+                            required
+                        >
+
+                        <div class="ayuda-medida">
+
+                            <strong>Medidas del stand</strong>
+
+                            <br><br>
+
+                            Ancho × Largo × Alto
+
+                            <br><br>
+
+                            Ejemplo:
+
+                            <strong>4 × 3 × 3 m</strong>
+
+                        </div>
+
+                    </div>
+
+                    <div class="campo-stand">
+
+                        <select name="presupuesto" required>
+
+                            <option value="" selected disabled>
+                                Presupuesto
+                            </option>
+
+                            <option>Menos de US$ 2,000</option>
+                            <option>US$ 2,000 - US$ 5,000</option>
+                            <option>US$ 5,000 - US$ 10,000</option>
+                            <option>Más de US$ 10,000</option>
+                            <option>Aún no definido</option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+                <textarea
+                    name="comentarios"
+                    rows="5"
+                    placeholder="Comentarios adicionales (opcional)"
+                ></textarea>
+
+                <button type="submit">
+
+                    Enviar Solicitud
+
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!--======================================
+MODAL CONFIRMACIÓN
+=======================================-->
+
+<div id="modalExito" class="modal">
+
+    <div class="modal-contenido modal-exito">
+
+        <div class="icono-exito">
+
+            ✓
+
+        </div>
+
+        <h2>¡Solicitud enviada con éxito!</h2>
+
+        <p class="mensaje-exito">
+
+            Gracias por contactar a <strong>Grupo V&D</strong>.
+
+            Hemos recibido tu solicitud de cotización correctamente.
+
+        </p>
+
+        <div class="pasos-exito">
+
+            <p>✔ Un asesor comercial revisará tu requerimiento.</p>
+
+            <p>✔ Analizaremos las dimensiones y características del proyecto.</p>
+
+            <p>✔ Nos comunicaremos contigo en un plazo máximo de <strong>24 horas hábiles.</strong></p>
+
+            <p>✔ Si tu proyecto es urgente, también puedes escribirnos por WhatsApp.</p>
+
+        </div>
+
+        <div class="acciones-exito">
+
+            <button id="nuevoFormulario">
+
+                Enviar otra solicitud
+
+            </button>
+
+            <a
+                 href="https://wa.me/51922116123"
+                 target="_blank"
+                 class="btn-whatsapp-exito"
+                 id="btnWhatsappExito">
+
+                Hablar por WhatsApp
+
+            </a>
+
+            <button id="cerrarExito">
+
+                Continuar navegando
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!--=========================================
+MODAL FERIAS
+==========================================-->
+
+<div id="modalFerias" class="modal-ferias">
+
+    <div class="modal-ferias-content">
+
+        <span class="cerrar-ferias">&times;</span>
+
+        <h2>Ferias en las que hemos participado</h2>
+
+        <p>
+            Grupo V&D ha participado en las principales ferias nacionales
+            desarrollando stands y espacios comerciales para 
+            empresas de diferentes paises.
+        </p>
+
+        <div class="modal-ferias-grid">
+
+            <img src="imagenes/ferias/gris/perumin.png" alt="PERUMIN">
+
+            <img src="imagenes/ferias/gris/expomina.png" alt="EXPOMINA">
+
+            <img src="imagenes/ferias/gris/expoalimentaria.png" alt="EXPOALIMENTARIA">
+
+            <img src="imagenes/ferias/gris/fimm.png" alt="FIMM">
+
+            <img src="imagenes/ferias/gris/amevea.png" alt="AMEVEA">
+
+            <img src="imagenes/ferias/gris/nexoinmobiliario.png" alt="NEXO">
+
+            <img src="imagenes/ferias/gris/agriexpo.png" alt="AGRIEXPO">
+
+            <img src="imagenes/ferias/gris/agroperu.png" alt="AGROPERU">
+
+            <img src="imagenes/ferias/gris/ciporc.png" alt="CIPORC">
+
+            <img src="imagenes/ferias/gris/excon.png" alt="EXCON">
+
+            <img src="imagenes/ferias/gris/expodeco.png" alt="EXPODECO">
+
+            <img src="imagenes/ferias/gris/expodetalles.png" alt="EXPODETALLES">
+
+            <img src="imagenes/ferias/gris/expoplast.png" alt="EXPOPLAST">
+
+            <img src="imagenes/ferias/gris/expotextil.png" alt="EXPOTEXTIL">
+
+            <img src="imagenes/ferias/gris/expourbania.png" alt="EXPOURBANIA">
+
+            <img src="imagenes/ferias/gris/lavc.png" alt="LAVC">
+
+            <img src="imagenes/ferias/gris/readagricola.png" alt="REDAGRICOLA">
+
+            <img src="imagenes/ferias/gris/tecnosalud.png" alt="TECNOSALUD">
+
+            <img src="imagenes/ferias/gris/yoconstructor.png" alt="YOCONSTRUCTOR">
+
+            <img src="imagenes/ferias/gris/conamin.png" alt="CONAMIN">
+
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+
+<script src="js/script.js"></script>
+
+</html>
