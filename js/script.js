@@ -349,11 +349,9 @@ document.addEventListener("submit", async function(e){
     try {
 
         const respuesta = await fetch(URL_WEB_APP, {
-
-            method: "POST",
-
-            body: JSON.stringify(datos)
-
+           method: "POST",
+           body: JSON.stringify(datos),
+           redirect: "follow"
         });
 
 

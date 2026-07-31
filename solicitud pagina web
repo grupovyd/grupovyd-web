@@ -1,0 +1,462 @@
+const CONFIG = {
+
+  HOJA: "SOLICITUDES",
+
+  CORREO_COMERCIAL: "comercial@grupovyd.com.pe",
+
+  ZONA_HORARIA: "America/Lima",
+
+  ORIGENES_VALIDOS: [
+    "HERO",
+    "NAVBAR",
+    "NOSOTROS",
+    "CONTACTO"
+  ]
+
+};
+
+
+//==================================================
+// RECIBIR SOLICITUD WEB
+//==================================================
+
+function doPost(e) {
+
+  try {
+
+    if (!e || !e.postData || !e.postData.contents) {
+
+      return crearRespuesta(false, "Solicitud inválida");
+
+    }
+
+    const datos = JSON.parse(e.postData.contents);
+
+
+    //==================================================
+    // HONEYPOT ANTI-BOT
+    //==================================================
+
+    if (datos.website) {
+
+      return crearRespuesta(true, "Solicitud recibida");
+
+    }
+
+
+    //==================================================
+    // LIMPIAR DATOS
+    //==================================================
+
+    const origen = limpiarTexto(datos.origen, 20).toUpperCase();
+
+    const nombre = limpiarTexto(datos.nombre, 120);
+
+    const empresa = limpiarTexto(datos.empresa, 150);
+
+    const ruc = limpiarTexto(datos.ruc, 11);
+
+    const correo = limpiarTexto(datos.correo, 150);
+
+    const telefono = limpiarTexto(datos.telefono, 9);
+
+    const feria = limpiarTexto(datos.feria, 150);
+
+    const tipoStand = limpiarTexto(datos.tipoStand, 100);
+
+    const medidas = limpiarTexto(datos.medidas, 100);
+
+    const presupuesto = limpiarTexto(datos.presupuesto, 100);
+
+    const comentarios = limpiarTexto(datos.comentarios, 1000);
+
+
+    //==================================================
+    // VALIDACIONES
+    //==================================================
+
+    if (!CONFIG.ORIGENES_VALIDOS.includes(origen)) {
+
+      return crearRespuesta(false, "Origen inválido");
+
+    }
+
+
+    if (
+      !nombre ||
+      !empresa ||
+      !ruc ||
+      !correo ||
+      !telefono ||
+      !feria ||
+      !tipoStand ||
+      !medidas ||
+      !presupuesto
+    ) {
+
+      return crearRespuesta(false, "Faltan campos obligatorios");
+
+    }
+
+
+    if (!/^\d{11}$/.test(ruc)) {
+
+      return crearRespuesta(false, "RUC inválido");
+
+    }
+
+
+    if (!/^\d{9}$/.test(telefono)) {
+
+      return crearRespuesta(false, "Teléfono inválido");
+
+    }
+
+
+    if (!validarCorreo(correo)) {
+
+      return crearRespuesta(false, "Correo inválido");
+
+    }
+
+
+    //==================================================
+    // FECHA Y HORA PERÚ
+    //==================================================
+
+    const ahora = new Date();
+
+    const fecha = Utilities.formatDate(
+      ahora,
+      CONFIG.ZONA_HORARIA,
+      "dd/MM/yyyy"
+    );
+
+    const hora = Utilities.formatDate(
+      ahora,
+      CONFIG.ZONA_HORARIA,
+      "HH:mm:ss"
+    );
+
+
+    //==================================================
+    // GUARDAR EN GOOGLE SHEETS
+    //==================================================
+
+    const lock = LockService.getScriptLock();
+
+    lock.waitLock(10000);
+
+    try {
+
+      const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+
+      const hoja = spreadsheet.getSheetByName(CONFIG.HOJA);
+
+      if (!hoja) {
+
+        throw new Error(
+          'No existe la hoja "' + CONFIG.HOJA + '"'
+        );
+
+      }
+
+
+      hoja.appendRow([
+
+        fecha,
+
+        hora,
+
+        origen,
+
+        nombre,
+
+        empresa,
+
+        ruc,
+
+        correo,
+
+        telefono,
+
+        feria,
+
+        tipoStand,
+
+        medidas,
+
+        presupuesto,
+
+        comentarios,
+
+        "NUEVO",
+
+        ""
+
+      ]);
+
+    } finally {
+
+      lock.releaseLock();
+
+    }
+
+
+    //==================================================
+    // ENVIAR CORREO A COMERCIAL
+    //==================================================
+
+    enviarCorreoComercial({
+
+      fecha,
+
+      hora,
+
+      origen,
+
+      nombre,
+
+      empresa,
+
+      ruc,
+
+      correo,
+
+      telefono,
+
+      feria,
+
+      tipoStand,
+
+      medidas,
+
+      presupuesto,
+
+      comentarios
+
+    });
+
+
+    return crearRespuesta(
+      true,
+      "Solicitud registrada correctamente"
+    );
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    return crearRespuesta(
+      false,
+      "No se pudo registrar la solicitud"
+    );
+
+  }
+
+}
+
+
+//==================================================
+// ENVIAR CORREO
+//==================================================
+
+function enviarCorreoComercial(datos) {
+
+  const asunto =
+    "NUEVA SOLICITUD WEB | " +
+    datos.empresa +
+    " | " +
+    datos.feria;
+
+
+  const html = `
+
+    <div style="
+      font-family:Arial,sans-serif;
+      max-width:650px;
+      margin:auto;
+      color:#333;
+    ">
+
+      <div style="
+        background:#8FC74A;
+        padding:25px;
+        color:white;
+      ">
+
+        <h2 style="margin:0;">
+          Nueva solicitud de cotización web
+        </h2>
+
+      </div>
+
+
+      <div style="
+        padding:30px;
+        border:1px solid #eeeeee;
+      ">
+
+        <p>
+          Se ha registrado una nueva solicitud
+          desde la página web de Grupo V&D.
+        </p>
+
+
+        <hr style="
+          border:none;
+          border-top:1px solid #eeeeee;
+          margin:25px 0;
+        ">
+
+
+        <p><strong>Cliente:</strong> ${escaparHtml(datos.nombre)}</p>
+
+        <p><strong>Empresa:</strong> ${escaparHtml(datos.empresa)}</p>
+
+        <p><strong>RUC:</strong> ${escaparHtml(datos.ruc)}</p>
+
+        <p><strong>Correo:</strong> ${escaparHtml(datos.correo)}</p>
+
+        <p><strong>Teléfono:</strong> ${escaparHtml(datos.telefono)}</p>
+
+        <p><strong>Feria:</strong> ${escaparHtml(datos.feria)}</p>
+
+        <p><strong>Tipo de Stand:</strong> ${escaparHtml(datos.tipoStand)}</p>
+
+        <p><strong>Medidas:</strong> ${escaparHtml(datos.medidas)}</p>
+
+        <p><strong>Presupuesto:</strong> ${escaparHtml(datos.presupuesto)}</p>
+
+
+        <p>
+          <strong>Comentarios:</strong>
+          <br>
+          ${escaparHtml(datos.comentarios || "Sin comentarios")}
+        </p>
+
+
+        <hr style="
+          border:none;
+          border-top:1px solid #eeeeee;
+          margin:25px 0;
+        ">
+
+
+        <p style="color:#666;">
+
+          <strong>Origen:</strong> ${escaparHtml(datos.origen)}
+
+          <br>
+
+          <strong>Fecha:</strong> ${escaparHtml(datos.fecha)}
+
+          <br>
+
+          <strong>Hora:</strong> ${escaparHtml(datos.hora)}
+
+        </p>
+
+      </div>
+
+    </div>
+
+  `;
+
+
+  MailApp.sendEmail({
+
+    to: CONFIG.CORREO_COMERCIAL,
+
+    subject: asunto,
+
+    htmlBody: html,
+
+    body:
+      "Nueva solicitud web de " +
+      datos.empresa +
+      " para la feria " +
+      datos.feria
+
+  });
+
+}
+
+
+//==================================================
+// LIMPIAR TEXTO
+//==================================================
+
+function limpiarTexto(valor, maximo) {
+
+  if (valor === null || valor === undefined) {
+
+    return "";
+
+  }
+
+  return String(valor)
+    .trim()
+    .substring(0, maximo);
+
+}
+
+
+//==================================================
+// VALIDAR CORREO
+//==================================================
+
+function validarCorreo(correo) {
+
+  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(correo);
+
+}
+
+
+//==================================================
+// ESCAPAR HTML
+//==================================================
+
+function escaparHtml(texto) {
+
+  return String(texto)
+
+    .replace(/&/g, "&amp;")
+
+    .replace(/</g, "&lt;")
+
+    .replace(/>/g, "&gt;")
+
+    .replace(/"/g, "&quot;")
+
+    .replace(/'/g, "&#039;");
+
+}
+
+
+//==================================================
+// RESPUESTA JSON
+//==================================================
+
+function crearRespuesta(exito, mensaje) {
+
+  return ContentService
+
+    .createTextOutput(
+
+      JSON.stringify({
+
+        success: exito,
+
+        message: mensaje
+
+      })
+
+    )
+
+    .setMimeType(
+      ContentService.MimeType.JSON
+    );
+
+}
