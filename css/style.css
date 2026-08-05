@@ -2490,6 +2490,8 @@ body{
 
 #hero{
 
+    scroll-margin-top: 100px;
+
     padding-bottom:20px;
 
     margin-top:82px;
