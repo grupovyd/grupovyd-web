@@ -24,4 +24,10 @@ async function iniciarComponentes(){
 
 }
 
-iniciarComponentes();
+iniciarComponentes().then(() => {
+
+    document.dispatchEvent(
+        new Event("componentesListos")
+    );
+
+});

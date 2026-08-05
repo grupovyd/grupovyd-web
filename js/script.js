@@ -1,3 +1,10 @@
+document.addEventListener(
+    "componentesListos",
+    iniciarAplicacion
+);
+
+function iniciarAplicacion(){
+
 const slides = [
 
 {
@@ -749,3 +756,5 @@ document.querySelectorAll("*").forEach(el => {
     console.log(el);
   }
 });
+
+}
