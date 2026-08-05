@@ -243,6 +243,8 @@ HERO
 
 #hero{
 
+    scroll-margin-top: 100px;
+
     position:relative;
 
     height:100vh;
