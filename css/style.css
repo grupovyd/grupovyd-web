@@ -2595,6 +2595,8 @@ NOSOTROS
 
 #nosotros{
 
+    scroll-margin-top:100px;
+
     padding:50px 24px;
 
 }
@@ -2697,6 +2699,8 @@ SERVICIOS
 
 #servicios{
 
+    scroll-margin-top:100px;
+
     padding:50px 20px 30px;
 
 }
@@ -2773,6 +2777,8 @@ PORTAFOLIO
 
 #portafolio{
 
+    scroll-margin-top:100px;
+
     padding:50px 24px;
 
 }
@@ -2843,6 +2849,8 @@ FERIA
 ==================================================*/
 
 #ferias{
+
+    scroll-margin-top:100px;
 
     padding:40px 24px;
 
@@ -2934,6 +2942,8 @@ CLIENTE
 
 #clientes{
 
+    scroll-margin-top:100px;
+
     padding:70px 0 60px;
 }
 
@@ -2975,6 +2985,8 @@ CONTACTO
 ==================================================*/
 
 #contacto{
+
+    scroll-margin-top:100px;
 
     padding:40px 24px 40px;
 
@@ -3126,6 +3138,8 @@ CONTACTO
 }
 
 footer{
+
+    scroll-margin-top:100px;
 
     padding:18px 16px;
 
