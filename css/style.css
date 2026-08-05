@@ -617,7 +617,6 @@ HERO
 ===================== */
 
 #nosotros{
-    scroll-margin-top:100px;
     padding:100px 8%;
     background:#f7f7f7;
 }
@@ -721,8 +720,6 @@ HERO
 
 #servicios{
 
-    scroll-margin-top:100px;
-
     padding:100px 8%;
 
     background:var(--verde-vyd);
@@ -808,8 +805,6 @@ HERO
 ===================== */
 
 #portafolio{
-
-    scroll-margin-top:100px;
 
     padding:100px 8%;
 
@@ -1489,8 +1484,6 @@ CONTACTO
 
 #contacto{
 
-    scroll-margin-top:100px;
-
     background:#fff;
 
     padding:110px 8%;
@@ -1830,8 +1823,6 @@ CLIENTES
 
 #clientes{
 
-    scroll-margin-top:100px;
-
     padding:110px 0;
 
     background:#4B4F52;   /* Gris Pantone V&D */
@@ -2098,8 +2089,6 @@ FERIAS
 =========================================*/
 
 #ferias{
-
-    scroll-margin-top:100px;
 
     padding:50px 20px 30px;
 
