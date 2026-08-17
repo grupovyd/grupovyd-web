@@ -3708,3 +3708,279 @@ CONTACTO
 }
 
 }
+
+/*==================================================
+   MOBILE LANDSCAPE
+   Celulares en orientación horizontal
+==================================================*/
+
+@media screen and (max-width:767px) and (orientation:landscape){
+
+    html,
+    body{
+        width:100%;
+        overflow-x:hidden;
+    }
+
+
+    /*==================================================
+       NAVBAR
+    ==================================================*/
+
+    .navbar{
+
+        height:70px;
+
+        padding:0 18px;
+
+    }
+
+    .logo img{
+
+        height:54px;
+
+    }
+
+    .menu-toggle{
+
+        display:flex;
+
+        width:40px;
+
+        height:40px;
+
+    }
+
+    .menu{
+
+        top:70px;
+
+    }
+
+
+    /*==================================================
+       HERO
+    ==================================================*/
+
+    #hero{
+
+        margin-top:70px;
+
+        height:calc(100vh - 70px);
+
+        min-height:360px;
+
+        padding:0;
+
+        display:flex;
+
+        align-items:stretch;
+
+        overflow:hidden;
+
+        background:linear-gradient(
+
+            to right,
+
+            #85898A 0%,
+
+            #85898A 62%,
+
+            #8FC74A 62%,
+
+            #8FC74A 100%
+
+        );
+
+    }
+
+
+    /*==================================================
+       IMAGEN DEL HERO
+    ==================================================*/
+
+    .hero-slider{
+
+        width:62%;
+
+        height:100%;
+
+        min-height:360px;
+
+        background-size:cover;
+
+        background-position:center center;
+
+    }
+
+
+    /*==================================================
+       TEXTO DEL HERO
+    ==================================================*/
+
+    .hero-slide-content{
+
+        left:30px;
+
+        right:30px;
+
+        bottom:45px;
+
+    }
+
+    .hero-slide-content h1{
+
+        font-size:clamp(36px,7vw,58px);
+
+        line-height:1;
+
+    }
+
+    .hero-slide-content p{
+
+        font-size:clamp(13px,2vw,18px);
+
+        line-height:1.35;
+
+        margin-top:8px;
+
+        max-width:330px;
+
+    }
+
+
+    /*==================================================
+       FORMULARIO HERO
+    ==================================================*/
+
+    .hero-form{
+
+        position:absolute;
+
+        width:36%;
+
+        max-width:none;
+
+        max-height:calc(100vh - 90px);
+
+        overflow-y:auto;
+
+        overflow-x:hidden;
+
+        right:2%;
+
+        top:50%;
+
+        transform:translateY(-50%);
+
+        margin:0;
+
+        padding:22px;
+
+        border-radius:18px;
+
+        z-index:30;
+
+    }
+
+    .hero-form h2{
+
+        font-size:clamp(22px,4vw,30px);
+
+        line-height:1.1;
+
+        text-align:center;
+
+        margin-bottom:8px;
+
+    }
+
+    .hero-form p{
+
+        font-size:13px;
+
+        line-height:1.4;
+
+        text-align:center;
+
+        margin-bottom:15px;
+
+    }
+
+    .hero-form form{
+
+        gap:8px;
+
+    }
+
+    .hero-form input,
+    .hero-form select{
+
+        height:42px;
+
+        font-size:13px;
+
+        padding:0 12px;
+
+        border-radius:9px;
+
+    }
+
+    .hero-form textarea{
+
+        min-height:75px;
+
+        height:75px;
+
+        font-size:13px;
+
+        padding:10px 12px;
+
+        border-radius:9px;
+
+    }
+
+    .form-row{
+
+        column-gap:8px;
+
+        row-gap:8px;
+
+    }
+
+    .hero-form button{
+
+        padding:11px;
+
+        font-size:14px;
+
+        border-radius:8px;
+
+    }
+
+
+    /*==================================================
+       WHATSAPP
+    ==================================================*/
+
+    .whatsapp-float{
+
+        width:50px;
+
+        height:50px;
+
+        right:15px;
+
+        bottom:15px;
+
+    }
+
+    .whatsapp-float img{
+
+        width:27px;
+
+        height:27px;
+
+    }
+
+}
