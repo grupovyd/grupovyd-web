@@ -422,6 +422,7 @@ and (max-width: 1000px) {
     }
 
     .brochure-header {
+        padding-top: 70px;
         margin-bottom: 20px;
     }
 

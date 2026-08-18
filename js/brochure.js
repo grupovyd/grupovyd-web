@@ -377,3 +377,83 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 });
+
+//==================================================
+// MODAL DE COTIZACIÓN
+//==================================================
+
+document.addEventListener("componentesListos", () => {
+
+    const botonCotizacion = document.getElementById("abrirModal");
+    const modal = document.getElementById("modalCotizacion");
+    const cerrarModal = document.querySelector(".cerrar-modal");
+
+    if (!botonCotizacion) {
+        console.warn("No se encontró el botón #abrirModal");
+        return;
+    }
+
+    if (!modal) {
+        console.warn("No se encontró el modal #modalCotizacion");
+        return;
+    }
+
+
+    //==================================================
+    // ABRIR MODAL
+    //==================================================
+
+    botonCotizacion.addEventListener("click", function(e) {
+
+        e.preventDefault();
+
+        modal.style.display = "flex";
+
+    });
+
+
+    //==================================================
+    // CERRAR MODAL
+    //==================================================
+
+    if (cerrarModal) {
+
+        cerrarModal.addEventListener("click", function() {
+
+            modal.style.display = "none";
+
+        });
+
+    }
+
+
+    //==================================================
+    // CERRAR AL HACER CLICK FUERA
+    //==================================================
+
+    modal.addEventListener("click", function(e) {
+
+        if (e.target === modal) {
+
+            modal.style.display = "none";
+
+        }
+
+    });
+
+
+    //==================================================
+    // CERRAR CON ESC
+    //==================================================
+
+    document.addEventListener("keydown", function(e) {
+
+        if (e.key === "Escape") {
+
+            modal.style.display = "none";
+
+        }
+
+    });
+
+});
