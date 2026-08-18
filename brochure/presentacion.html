@@ -187,7 +187,6 @@
 
     </main>
 
-
     <!-- ==========================================
          FOOTER ACTUAL
          ========================================== -->
@@ -196,16 +195,260 @@
 
 
     <!-- ==========================================
+         MODAL COTIZACIÓN
+         MISMO MODAL DE LA PÁGINA PRINCIPAL
+         ========================================== -->
+
+    <div id="modalCotizacion" class="modal">
+
+        <div class="modal-contenido">
+
+            <span class="cerrar-modal">&times;</span>
+
+            <div class="modal-form">
+
+                <h2>Solicita tu Cotización</h2>
+
+                <p>
+                    Cuéntanos sobre tu proyecto y te contactaremos.
+                </p>
+
+                <form id="formModal">
+
+                    <input
+                        type="text"
+                        name="website"
+                        tabindex="-1"
+                        autocomplete="off"
+                        class="campo-web"
+                    >
+
+                    <input
+                        type="text"
+                        name="nombre"
+                        placeholder="Nombre completo"
+                        required
+                    >
+
+                    <div class="form-row">
+
+                        <input
+                            type="text"
+                            name="empresa"
+                            placeholder="Empresa"
+                            required
+                        >
+
+                        <input
+                            type="text"
+                            name="ruc"
+                            placeholder="RUC"
+                            maxlength="11"
+                            pattern="[0-9]{11}"
+                            inputmode="numeric"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <input
+                            type="email"
+                            name="correo"
+                            placeholder="Correo"
+                            required
+                        >
+
+                        <input
+                            type="tel"
+                            name="telefono"
+                            placeholder="Teléfono"
+                            maxlength="9"
+                            pattern="[0-9]{9}"
+                            inputmode="numeric"
+                            required
+                        >
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <input
+                            type="text"
+                            name="feria"
+                            placeholder="Feria"
+                            required
+                        >
+
+                        <div class="campo-stand">
+
+                            <select name="tipoStand" required>
+
+                                <option value="" selected disabled>
+                                    Tipo de Stand
+                                </option>
+
+                                <option>Isla</option>
+                                <option>Cabeza de Isla</option>
+                                <option>Esquina</option>
+                                <option>Lateral</option>
+                                <option>No definido</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-row">
+
+                        <div class="campo-medida">
+
+                            <input
+                                type="text"
+                                name="medidas"
+                                placeholder="Ej.: 4x3x3"
+                                required
+                            >
+
+                            <div class="ayuda-medida">
+
+                                <strong>Medidas del stand</strong>
+
+                                <br><br>
+
+                                Ancho × Largo × Alto
+
+                                <br><br>
+
+                                Ejemplo:
+
+                                <strong>4 × 3 × 3 m</strong>
+
+                            </div>
+
+                        </div>
+
+                        <div class="campo-stand">
+
+                            <select name="presupuesto" required>
+
+                                <option value="" selected disabled>
+                                    Presupuesto
+                                </option>
+
+                                <option>Menos de US$ 2,000</option>
+                                <option>US$ 2,000 - US$ 5,000</option>
+                                <option>US$ 5,000 - US$ 10,000</option>
+                                <option>Más de US$ 10,000</option>
+                                <option>Aún no definido</option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <textarea
+                        name="comentarios"
+                        rows="5"
+                        placeholder="Comentarios adicionales (opcional)"
+                    ></textarea>
+
+                    <button type="submit">
+                        Enviar Solicitud
+                    </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
+         MODAL CONFIRMACIÓN
+         MISMO MODAL DE LA PÁGINA PRINCIPAL
+         ========================================== -->
+
+    <div id="modalExito" class="modal">
+
+        <div class="modal-contenido modal-exito">
+
+            <div class="icono-exito">
+                ✓
+            </div>
+
+            <h2>¡Solicitud enviada con éxito!</h2>
+
+            <p class="mensaje-exito">
+
+                Gracias por contactar a <strong>Grupo V&D</strong>.
+
+                Hemos recibido tu solicitud de cotización correctamente.
+
+            </p>
+
+            <div class="pasos-exito">
+
+                <p>✔ Un asesor comercial revisará tu requerimiento.</p>
+
+                <p>✔ Analizaremos las dimensiones y características del proyecto.</p>
+
+                <p>
+                    ✔ Nos comunicaremos contigo en un plazo máximo de
+                    <strong>24 horas hábiles.</strong>
+                </p>
+
+                <p>
+                    ✔ Si tu proyecto es urgente, también puedes escribirnos
+                    por WhatsApp.
+                </p>
+
+            </div>
+
+            <div class="acciones-exito">
+
+                <button id="nuevoFormulario">
+                    Enviar otra solicitud
+                </button>
+
+                <a
+                    href="https://wa.me/51922116123"
+                    target="_blank"
+                    class="btn-whatsapp-exito"
+                    id="btnWhatsappExito"
+                >
+                    Hablar por WhatsApp
+                </a>
+
+                <button id="cerrarExito">
+                    Continuar navegando
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ==========================================
          COMPONENTES
          ========================================== -->
 
     <script src="/js/components.js"></script>
+
 
     <!-- ==========================================
          FUNCIONALIDAD DEL BROCHURE
          ========================================== -->
 
     <script src="/js/brochure.js"></script>
+
 
 </body>
 
