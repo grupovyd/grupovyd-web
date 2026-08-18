@@ -5,7 +5,19 @@ document.addEventListener(
 
 function iniciarAplicacion(){
 
-const slides = [
+    //==================================================
+    // SOLO EJECUTAR LA APLICACIÓN PRINCIPAL EN INDEX
+    //==================================================
+
+    const heroSlider = document.querySelector(".hero-slider");
+
+    if(!heroSlider){
+
+        return;
+
+    }
+
+    const slides = [
 
 {
     image: "imagenes/hero/biomont.jpg",
@@ -41,7 +53,6 @@ const slides = [
 
 let currentSlide = 0;
 
-const heroSlider = document.querySelector(".hero-slider");
 const heroTitle = document.getElementById("hero-title");
 const heroSubtitle = document.getElementById("hero-subtitle");
 const menuToggle = document.getElementById("menuToggle");
