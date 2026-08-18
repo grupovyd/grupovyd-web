@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Brochure | Grupo V&D</title>
+
+    <meta
+        name="description"
+        content="Conoce Grupo V&D, nuestra experiencia, servicios y proyectos en diseño, fabricación e implementación de stands para ferias, exposiciones y eventos."
+    >
+
+    <link
+        rel="icon"
+        href="/favicon.png"
+        type="image/png"
+    >
+
+    <!-- CSS PRINCIPAL -->
+    <link
+        rel="stylesheet"
+        href="/css/style.css"
+    >
+
+    <!-- CSS ESPECÍFICO DEL BROCHURE -->
+    <link
+        rel="stylesheet"
+        href="/css/brochure.css"
+    >
+
+</head>
+
+
+<body>
+
+    <!-- ==========================================
+         NAVBAR ACTUAL
+         ========================================== -->
+
+    <div id="navbar-container"></div>
+
+
+    <!-- ==========================================
+         CONTENIDO DEL BROCHURE
+         ========================================== -->
+
+    <main class="brochure-page">
+
+        <section class="brochure-header">
+
+            <span class="brochure-eyebrow">
+                GRUPO V&D
+            </span>
+
+            <h1>
+                Brochure / Presentación
+            </h1>
+
+            <p>
+                Conoce nuestra experiencia, servicios y proyectos
+                en diseño, fabricación e implementación de stands
+                para ferias, exposiciones y eventos.
+            </p>
+
+        </section>
+
+
+        <!-- ======================================
+             VISOR DEL PDF
+             ====================================== -->
+
+        <section class="brochure-viewer-section">
+
+            <div class="brochure-viewer">
+
+                <div class="brochure-toolbar">
+
+                    <div class="brochure-toolbar-left">
+
+                        <span class="brochure-page-counter">
+                            Página <span id="currentPage">1</span>
+                            de <span id="totalPages">--</span>
+                        </span>
+
+                    </div>
+
+
+                    <div class="brochure-toolbar-center">
+
+                        <button
+                            type="button"
+                            id="zoomOut"
+                            class="brochure-control"
+                            aria-label="Reducir zoom"
+                        >
+                            −
+                        </button>
+
+                        <span id="zoomLevel">
+                            100%
+                        </span>
+
+                        <button
+                            type="button"
+                            id="zoomIn"
+                            class="brochure-control"
+                            aria-label="Aumentar zoom"
+                        >
+                            +
+                        </button>
+
+                    </div>
+
+
+                    <div class="brochure-toolbar-right">
+
+                        <button
+                            type="button"
+                            id="fullscreenButton"
+                            class="brochure-control brochure-fullscreen"
+                            aria-label="Ver en pantalla completa"
+                        >
+                            ⛶
+                            <span>
+                                Pantalla completa
+                            </span>
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- CONTENEDOR DEL PDF -->
+
+                <div
+                    id="pdfViewer"
+                    class="pdf-viewer"
+                >
+
+                    <div
+                        id="pdfLoading"
+                        class="pdf-loading"
+                    >
+                        Cargando brochure...
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <!-- ======================================
+             ACCIONES
+             ====================================== -->
+
+        <section class="brochure-actions">
+
+            <a
+                href="/pdf/brochure-vyd.pdf"
+                download
+                class="brochure-button brochure-download"
+            >
+                ↓ Descargar Brochure
+            </a>
+
+
+            <a
+                href="https://wa.me/51922116123"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="brochure-button brochure-whatsapp"
+            >
+                WhatsApp
+            </a>
+
+        </section>
+
+    </main>
+
+
+    <!-- ==========================================
+         FOOTER ACTUAL
+         ========================================== -->
+
+    <div id="footer-container"></div>
+
+
+    <!-- ==========================================
+         COMPONENTES
+         ========================================== -->
+
+    <script src="/js/components.js"></script>
+
+    <!-- ==========================================
+         FUNCIONALIDAD DEL BROCHURE
+         ========================================== -->
+
+    <script src="/js/brochure.js"></script>
+
+</body>
+
+</html>

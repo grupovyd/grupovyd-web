@@ -1,0 +1,452 @@
+/* ==================================================
+   GRUPO V&D — VISTA BROCHURE
+   ================================================== */
+
+
+/* ==================================================
+   CONTENEDOR GENERAL
+   ================================================== */
+
+.brochure-page {
+    background: #f5f5f5;
+    min-height: calc(100vh - 80px);
+    padding: 55px 5% 70px;
+}
+
+
+/* ==================================================
+   ENCABEZADO
+   ================================================== */
+
+.brochure-header {
+    max-width: 1000px;
+    margin: 0 auto 35px;
+    text-align: center;
+}
+
+.brochure-eyebrow {
+    display: block;
+    color: #8fc74a;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    margin-bottom: 10px;
+}
+
+.brochure-header h1 {
+    margin: 0 0 15px;
+    font-size: clamp(30px, 4vw, 48px);
+    line-height: 1.15;
+    color: #222;
+    font-weight: 700;
+}
+
+.brochure-header p {
+    max-width: 760px;
+    margin: 0 auto;
+    color: #666;
+    font-size: 17px;
+    line-height: 1.6;
+}
+
+
+/* ==================================================
+   VISOR
+   ================================================== */
+
+.brochure-viewer-section {
+    width: 100%;
+    max-width: 1250px;
+    margin: 0 auto;
+}
+
+.brochure-viewer {
+    width: 100%;
+    background: #222;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.18);
+}
+
+
+/* ==================================================
+   BARRA DE HERRAMIENTAS
+   ================================================== */
+
+.brochure-toolbar {
+    min-height: 58px;
+    background: #303030;
+    color: #fff;
+
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+
+    padding: 0 18px;
+    gap: 15px;
+}
+
+.brochure-toolbar-left {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.brochure-toolbar-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+
+.brochure-toolbar-right {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.brochure-page-counter {
+    font-size: 14px;
+    color: #e5e5e5;
+}
+
+
+/* ==================================================
+   CONTROLES
+   ================================================== */
+
+.brochure-control {
+    border: none;
+    background: transparent;
+    color: #fff;
+
+    cursor: pointer;
+
+    min-width: 34px;
+    height: 34px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 6px;
+
+    font-size: 18px;
+
+    transition:
+        background 0.2s ease,
+        transform 0.2s ease;
+}
+
+.brochure-control:hover {
+    background: rgba(255, 255, 255, 0.12);
+}
+
+.brochure-control:active {
+    transform: scale(0.94);
+}
+
+#zoomLevel {
+    min-width: 55px;
+    text-align: center;
+    font-size: 14px;
+}
+
+
+/* ==================================================
+   PANTALLA COMPLETA
+   ================================================== */
+
+.brochure-fullscreen {
+    gap: 8px;
+    padding: 0 10px;
+}
+
+.brochure-fullscreen span {
+    font-size: 13px;
+}
+
+
+/* ==================================================
+   CONTENEDOR PDF
+   ================================================== */
+
+.pdf-viewer {
+    position: relative;
+
+    width: 100%;
+
+    height: 78vh;
+    min-height: 600px;
+
+    background: #525659;
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 30px 20px;
+}
+
+
+/* ==================================================
+   CARGANDO
+   ================================================== */
+
+.pdf-loading {
+    position: absolute;
+
+    top: 50%;
+    left: 50%;
+
+    transform: translate(-50%, -50%);
+
+    color: #fff;
+
+    font-size: 16px;
+
+    text-align: center;
+}
+
+
+/* ==================================================
+   PÁGINAS DEL PDF
+   ================================================== */
+
+.pdf-page {
+    display: block;
+
+    margin: 0 auto 25px;
+
+    background: #fff;
+
+    box-shadow:
+        0 5px 20px rgba(0, 0, 0, 0.25);
+
+    max-width: none;
+
+    transform-origin: top center;
+
+    transition:
+        width 0.2s ease;
+}
+
+
+/* ==================================================
+   PANTALLA COMPLETA DEL VISOR
+   ================================================== */
+
+.brochure-viewer:fullscreen {
+    width: 100vw;
+    height: 100vh;
+
+    border-radius: 0;
+}
+
+.brochure-viewer:fullscreen .pdf-viewer {
+    height: calc(100vh - 58px);
+}
+
+
+/* ==================================================
+   BOTONES INFERIORES
+   ================================================== */
+
+.brochure-actions {
+    max-width: 1250px;
+
+    margin: 30px auto 0;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    gap: 15px;
+
+    flex-wrap: wrap;
+}
+
+.brochure-button {
+    min-width: 220px;
+
+    min-height: 50px;
+
+    padding: 13px 25px;
+
+    border-radius: 7px;
+
+    text-decoration: none;
+
+    font-size: 15px;
+
+    font-weight: 600;
+
+    display: inline-flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.brochure-button:hover {
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 6px 15px rgba(0, 0, 0, 0.15);
+}
+
+
+/* ==================================================
+   DESCARGA
+   ================================================== */
+
+.brochure-download {
+    background: #8fc74a;
+    color: #fff;
+}
+
+
+/* ==================================================
+   WHATSAPP
+   ================================================== */
+
+.brochure-whatsapp {
+    background: #25d366;
+    color: #fff;
+}
+
+
+/* ==================================================
+   TABLET
+   ================================================== */
+
+@media screen and (max-width: 900px) {
+
+    .brochure-page {
+        padding: 40px 25px 60px;
+    }
+
+    .pdf-viewer {
+        height: 70vh;
+        min-height: 500px;
+    }
+
+    .brochure-toolbar {
+        grid-template-columns: 1fr auto 1fr;
+    }
+
+}
+
+
+/* ==================================================
+   CELULAR
+   ================================================== */
+
+@media screen and (max-width: 600px) {
+
+    .brochure-page {
+        padding: 30px 12px 45px;
+    }
+
+    .brochure-header {
+        margin-bottom: 25px;
+    }
+
+    .brochure-header h1 {
+        font-size: 30px;
+    }
+
+    .brochure-header p {
+        font-size: 15px;
+    }
+
+    .brochure-toolbar {
+        min-height: 52px;
+
+        padding: 0 8px;
+
+        grid-template-columns: auto 1fr auto;
+
+        gap: 5px;
+    }
+
+    .brochure-page-counter {
+        font-size: 11px;
+    }
+
+    .brochure-fullscreen span {
+        display: none;
+    }
+
+    .pdf-viewer {
+        height: 70vh;
+        min-height: 450px;
+
+        padding: 20px 10px;
+    }
+
+    .brochure-actions {
+        flex-direction: column;
+
+        gap: 12px;
+    }
+
+    .brochure-button {
+        width: 100%;
+        min-width: 0;
+    }
+
+}
+
+
+/* ==================================================
+   CELULAR HORIZONTAL
+   ================================================== */
+
+@media screen
+and (orientation: landscape)
+and (max-width: 1000px) {
+
+    .brochure-page {
+        padding-top: 25px;
+        padding-bottom: 35px;
+    }
+
+    .brochure-header {
+        margin-bottom: 20px;
+    }
+
+    .brochure-header h1 {
+        font-size: 28px;
+    }
+
+    .brochure-header p {
+        font-size: 14px;
+    }
+
+    .pdf-viewer {
+        height: 72vh;
+        min-height: 350px;
+    }
+
+}
+
+
+/* ==================================================
+   ACCESIBILIDAD
+   ================================================== */
+
+.brochure-control:focus-visible,
+.brochure-button:focus-visible {
+    outline: 3px solid rgba(143, 199, 74, 0.55);
+    outline-offset: 3px;
+}
