@@ -10,7 +10,7 @@
 .brochure-page {
     background: #f5f5f5;
     min-height: calc(100vh - 80px);
-    padding: 55px 5% 70px;
+    padding: 105px 5% 70px;
 }
 
 
@@ -332,7 +332,7 @@
 @media screen and (max-width: 900px) {
 
     .brochure-page {
-        padding: 40px 25px 60px;
+        padding: 95px 25px 60px;
     }
 
     .pdf-viewer {
@@ -354,11 +354,11 @@
 @media screen and (max-width: 600px) {
 
     .brochure-page {
-        padding: 30px 12px 45px;
+        padding: 90px 12px 45px;
     }
 
     .brochure-header {
-        padding-top: 70px;
+        padding-top: 0px;
         margin-bottom: 25px;
     }
 
@@ -418,12 +418,12 @@ and (orientation: landscape)
 and (max-width: 1000px) {
 
     .brochure-page {
-        padding-top: 80px;
+        padding-top: 95px;
         padding-bottom: 35px;
     }
 
     .brochure-header {
-        padding-top: 70px;
+        padding-top: 0px;
         margin-bottom: 20px;
     }
 
