@@ -2,10 +2,18 @@
    GRUPO V&D — VISOR DEL BROCHURE
    ================================================== */
 
+/* ==================================================
+   GRUPO V&D — VISOR DEL BROCHURE
+   CARGA OPTIMIZADA / LAZY RENDERING
+   ================================================== */
+
 document.addEventListener("DOMContentLoaded", () => {
 
-    const pdfViewer = document.getElementById("pdfViewer");
-    const pdfLoading = document.getElementById("pdfLoading");
+    const pdfViewer =
+        document.getElementById("pdfViewer");
+
+    const pdfLoading =
+        document.getElementById("pdfLoading");
 
     const currentPageElement =
         document.getElementById("currentPage");
@@ -26,13 +34,31 @@ document.addEventListener("DOMContentLoaded", () => {
         document.getElementById("fullscreenButton");
 
 
-    /* ==================================================
-       CONFIGURACIÓN
-       ================================================== */
+    // ==================================================
+    // VALIDACIÓN
+    // ==================================================
 
-    const pdfURL = "/pdf/brochure-vyd.pdf";
+    if(!pdfViewer){
+
+        console.error(
+            "BROCHURE: No se encontró #pdfViewer"
+        );
+
+        return;
+
+    }
+
+
+    // ==================================================
+    // CONFIGURACIÓN
+    // ==================================================
+
+    const pdfURL =
+        "/pdf/brochure-vyd.pdf";
+
 
     let pdfDocument = null;
+
 
     let zoom = 1;
 
@@ -42,41 +68,43 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const maxZoom = 1.8;
 
+
     let escalaBase = 1;
 
-    function calcularEscalaBase(page){
 
-    const viewportBase =
-        page.getViewport({
-            scale: 1
-        });
+    // ==================================================
+    // CONTROL DE PÁGINAS
+    // ==================================================
 
-    const anchoDisponible =
-        pdfViewer.clientWidth - 40;
+    const paginas = new Map();
 
-    return anchoDisponible /
-           viewportBase.width;
+    let paginaActiva = 1;
 
-    }
+    let observadorPaginas = null;
 
 
-    /* ==================================================
-       CARGAR PDF.JS
-       ================================================== */
+    // ==================================================
+    // CARGAR PDF.JS
+    // ==================================================
 
-    const pdfScript = document.createElement("script");
+    const pdfScript =
+        document.createElement("script");
+
 
     pdfScript.src =
         "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js";
+
 
     pdfScript.onload = () => {
 
         pdfjsLib.GlobalWorkerOptions.workerSrc =
             "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
+
         cargarPDF();
 
     };
+
 
     pdfScript.onerror = () => {
 
@@ -86,26 +114,96 @@ document.addEventListener("DOMContentLoaded", () => {
 
     };
 
+
     document.head.appendChild(pdfScript);
 
 
-    /* ==================================================
-       CARGAR DOCUMENTO
-       ================================================== */
+    // ==================================================
+    // CARGAR DOCUMENTO
+    // ==================================================
 
     async function cargarPDF(){
 
-        try {
+        try{
 
             pdfDocument =
-                await pdfjsLib.getDocument(pdfURL).promise;
+                await pdfjsLib
+                    .getDocument(pdfURL)
+                    .promise;
+
 
             totalPagesElement.textContent =
                 pdfDocument.numPages;
 
-            pdfLoading.style.display = "none";
 
-            await renderizarTodasLasPaginas();
+            /*
+             * Calculamos el tamaño base
+             * utilizando únicamente la primera página.
+             */
+
+            const primeraPagina =
+                await pdfDocument.getPage(1);
+
+
+            escalaBase =
+                calcularEscalaBase(
+                    primeraPagina
+                );
+
+
+            /*
+             * Ocultamos el mensaje de carga.
+             */
+
+            if(pdfLoading){
+
+                pdfLoading.style.display =
+                    "none";
+
+            }
+
+
+            /*
+             * Creamos únicamente los espacios
+             * de las páginas.
+             *
+             * TODAVÍA NO dibujamos las 33.
+             */
+
+            await crearEstructuraPaginas(
+                primeraPagina
+            );
+
+
+            /*
+             * Activamos la carga inteligente.
+             */
+
+            iniciarObservador();
+
+
+            /*
+             * Renderizamos inmediatamente
+             * solamente las primeras páginas.
+             */
+
+            await renderizarPagina(1);
+
+            if(pdfDocument.numPages >= 2){
+
+                renderizarPagina(2);
+
+            }
+
+            if(pdfDocument.numPages >= 3){
+
+                renderizarPagina(3);
+
+            }
+
+
+            actualizarPaginaVisible();
+
 
         }
 
@@ -116,6 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 error
             );
 
+
             mostrarError(
                 "No fue posible cargar el brochure."
             );
@@ -125,15 +224,53 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    /* ==================================================
-       RENDERIZAR TODAS LAS PÁGINAS
-       ================================================== */
+    // ==================================================
+    // CALCULAR ESCALA BASE
+    // ==================================================
 
-    async function renderizarTodasLasPaginas(){
+    function calcularEscalaBase(page){
+
+        const viewportBase =
+            page.getViewport({
+                scale: 1
+            });
+
+
+        const anchoDisponible =
+            Math.max(
+                pdfViewer.clientWidth - 40,
+                100
+            );
+
+
+        return anchoDisponible /
+               viewportBase.width;
+
+    }
+
+
+    // ==================================================
+    // CREAR ESTRUCTURA DE PÁGINAS
+    // ==================================================
+
+    async function crearEstructuraPaginas(
+        primeraPagina
+    ){
 
         pdfViewer
-            .querySelectorAll(".pdf-page")
-            .forEach(page => page.remove());
+            .querySelectorAll(".pdf-page-shell")
+            .forEach(elemento => elemento.remove());
+
+
+        const viewportBase =
+            primeraPagina.getViewport({
+                scale: 1
+            });
+
+
+        const relacion =
+            viewportBase.height /
+            viewportBase.width;
 
 
         for(
@@ -142,169 +279,380 @@ document.addEventListener("DOMContentLoaded", () => {
             numeroPagina++
         ){
 
-            await renderizarPagina(numeroPagina);
+            const shell =
+                document.createElement("div");
+
+
+            shell.className =
+                "pdf-page-shell";
+
+
+            shell.dataset.page =
+                numeroPagina;
+
+
+            /*
+             * Reservamos el espacio visual
+             * sin crear todavía el canvas.
+             */
+
+            shell.style.aspectRatio =
+                `${viewportBase.width} / ${viewportBase.height}`;
+
+
+            shell.style.width =
+                "min(100%, 900px)";
+
+
+            shell.style.maxWidth =
+                "100%";
+
+
+            shell.style.margin =
+                "0 auto 25px";
+
+
+            shell.style.background =
+                "#ffffff";
+
+
+            shell.style.boxShadow =
+                "0 5px 20px rgba(0, 0, 0, 0.25)";
+
+
+            shell.style.position =
+                "relative";
+
+
+            shell.style.overflow =
+                "hidden";
+
+
+            /*
+             * Indicador discreto mientras
+             * la página todavía no se renderiza.
+             */
+
+            const indicador =
+                document.createElement("div");
+
+
+            indicador.className =
+                "pdf-page-loading";
+
+
+            indicador.textContent =
+                "Cargando página...";
+
+
+            shell.appendChild(
+                indicador
+            );
+
+
+            pdfViewer.appendChild(
+                shell
+            );
+
+
+            paginas.set(
+                numeroPagina,
+                {
+                    shell,
+                    renderizada: false,
+                    renderizando: false,
+                    canvas: null
+                }
+            );
 
         }
 
     }
 
 
-    /* ==================================================
-       RENDERIZAR UNA PÁGINA
-       ================================================== */
+    // ==================================================
+    // OBSERVADOR DE PÁGINAS
+    // ==================================================
 
-async function renderizarPagina(numeroPagina){
+    function iniciarObservador(){
 
-    const page =
-        await pdfDocument.getPage(numeroPagina);
+        if(observadorPaginas){
 
+            observadorPaginas.disconnect();
 
-    // ============================================
-    // CALCULAR ESCALA BASE SEGÚN EL VISOR
-    // ============================================
-
-    if(numeroPagina === 1){
-
-        escalaBase =
-            calcularEscalaBase(page);
-
-    }
+        }
 
 
-    const escalaFinal =
-        escalaBase * zoom;
+        observadorPaginas =
+            new IntersectionObserver(
+
+                entradas => {
+
+                    entradas.forEach(
+                        entrada => {
+
+                            if(!entrada.isIntersecting){
+
+                                return;
+
+                            }
 
 
-    const viewport =
-        page.getViewport({
-            scale: escalaFinal
-        });
+                            const numeroPagina =
+                                Number(
+                                    entrada
+                                        .target
+                                        .dataset
+                                        .page
+                                );
 
 
-    const canvas =
-        document.createElement("canvas");
+                            /*
+                             * Renderizamos la página
+                             * cuando entra en la zona cercana
+                             * al usuario.
+                             */
+
+                            renderizarPagina(
+                                numeroPagina
+                            );
+
+                        }
+                    );
+
+                },
+
+                {
+                    root: pdfViewer,
+
+                    rootMargin:
+                        "1000px 0px 1000px 0px",
+
+                    threshold: 0
+
+                }
+
+            );
 
 
-    canvas.className =
-        "pdf-page";
+        paginas.forEach(
+            pagina => {
 
+                observadorPaginas.observe(
+                    pagina.shell
+                );
 
-    const context =
-        canvas.getContext("2d", {
-            alpha: false
-        });
-
-
-    const pixelRatio =
-        window.devicePixelRatio || 1;
-
-
-    canvas.width =
-        Math.floor(
-            viewport.width * pixelRatio
+            }
         );
 
-
-    canvas.height =
-        Math.floor(
-            viewport.height * pixelRatio
-        );
+    }
 
 
-    canvas.style.width =
-        `${viewport.width}px`;
+    // ==================================================
+    // RENDERIZAR UNA PÁGINA
+    // ==================================================
+
+    async function renderizarPagina(
+        numeroPagina
+    ){
+
+        const datos =
+            paginas.get(numeroPagina);
 
 
-    canvas.style.height =
-        `${viewport.height}px`;
+        if(!datos){
 
-
-    canvas.dataset.page =
-        numeroPagina;
-
-
-    pdfViewer.appendChild(canvas);
-
-
-    await page.render({
-
-        canvasContext: context,
-
-        viewport: viewport,
-
-        transform: pixelRatio !== 1
-            ? [
-                pixelRatio,
-                0,
-                0,
-                pixelRatio,
-                0,
-                0
-            ]
-            : null
-
-    }).promise;
-
-}
-
-
-    /* ==================================================
-       ZOOM
-       ================================================== */
-
-    zoomInButton.addEventListener(
-        "click",
-        async () => {
-
-            if(zoom >= maxZoom){
-                return;
-            }
-
-            zoom += zoomStep;
-
-            zoom =
-                Math.round(zoom * 10) / 10;
-
-            actualizarZoom();
-
-            await renderizarTodasLasPaginas();
+            return;
 
         }
-    );
 
 
-    zoomOutButton.addEventListener(
-        "click",
-        async () => {
+        /*
+         * Si ya está renderizada,
+         * no hacemos absolutamente nada.
+         */
 
-            if(zoom <= minZoom){
-                return;
-            }
+        if(datos.renderizada){
 
-            zoom -= zoomStep;
-
-            zoom =
-                Math.round(zoom * 10) / 10;
-
-            actualizarZoom();
-
-            await renderizarTodasLasPaginas();
+            return;
 
         }
-    );
 
 
-    function actualizarZoom(){
+        /*
+         * Evitamos que la misma página
+         * se procese dos veces simultáneamente.
+         */
 
-        zoomLevelElement.textContent =
-            Math.round(zoom * 100) + "%";
+        if(datos.renderizando){
+
+            return;
+
+        }
+
+
+        datos.renderizando =
+            true;
+
+
+        try{
+
+            const page =
+                await pdfDocument.getPage(
+                    numeroPagina
+                );
+
+
+            /*
+             * Recalculamos la escala actual
+             * únicamente al renderizar.
+             */
+
+            if(numeroPagina === 1){
+
+                escalaBase =
+                    calcularEscalaBase(
+                        page
+                    );
+
+            }
+
+
+            const escalaFinal =
+                escalaBase * zoom;
+
+
+            const viewport =
+                page.getViewport({
+                    scale: escalaFinal
+                });
+
+
+            const canvas =
+                document.createElement(
+                    "canvas"
+                );
+
+
+            canvas.className =
+                "pdf-page";
+
+
+            const context =
+                canvas.getContext(
+                    "2d",
+                    {
+                        alpha: false
+                    }
+                );
+
+
+            const pixelRatio =
+                Math.min(
+                    window.devicePixelRatio || 1,
+                    2
+                );
+
+
+            canvas.width =
+                Math.floor(
+                    viewport.width *
+                    pixelRatio
+                );
+
+
+            canvas.height =
+                Math.floor(
+                    viewport.height *
+                    pixelRatio
+                );
+
+
+            canvas.style.width =
+                `${viewport.width}px`;
+
+
+            canvas.style.height =
+                `${viewport.height}px`;
+
+
+            canvas.dataset.page =
+                numeroPagina;
+
+
+            /*
+             * Limpiamos el indicador.
+             */
+
+            datos.shell.innerHTML =
+                "";
+
+
+            datos.shell.appendChild(
+                canvas
+            );
+
+
+            /*
+             * Guardamos referencia.
+             */
+
+            datos.canvas =
+                canvas;
+
+
+            await page.render({
+
+                canvasContext:
+                    context,
+
+                viewport:
+                    viewport,
+
+                transform:
+                    pixelRatio !== 1
+                        ? [
+                            pixelRatio,
+                            0,
+                            0,
+                            pixelRatio,
+                            0,
+                            0
+                        ]
+                        : null
+
+            }).promise;
+
+
+            datos.renderizada =
+                true;
+
+
+        }
+
+        catch(error){
+
+            console.error(
+                `Error renderizando página ${numeroPagina}:`,
+                error
+            );
+
+
+        }
+
+        finally{
+
+            datos.renderizando =
+                false;
+
+        }
 
     }
 
 
-    /* ==================================================
-       DETECTAR PÁGINA VISIBLE
-       ================================================== */
+    // ==================================================
+    // DETECTAR PÁGINA VISIBLE
+    // ==================================================
 
     pdfViewer.addEventListener(
         "scroll",
@@ -314,32 +662,46 @@ async function renderizarPagina(numeroPagina){
 
     function actualizarPaginaVisible(){
 
-        const paginas =
-            pdfViewer.querySelectorAll(".pdf-page");
+        const shells =
+            pdfViewer.querySelectorAll(
+                ".pdf-page-shell"
+            );
 
 
-        if(!paginas.length){
+        if(!shells.length){
+
             return;
+
         }
 
 
         const centro =
             pdfViewer.scrollTop +
-            (pdfViewer.clientHeight / 2);
+            (
+                pdfViewer.clientHeight /
+                2
+            );
 
 
-        let paginaActual = 1;
+        let paginaActual =
+            1;
 
 
-        paginas.forEach(
-            (pagina, index) => {
+        shells.forEach(
+            (shell, index) => {
 
-                const paginaCentro =
-                    pagina.offsetTop +
-                    (pagina.offsetHeight / 2);
+                const centroPagina =
+                    shell.offsetTop +
+                    (
+                        shell.offsetHeight /
+                        2
+                    );
 
 
-                if(paginaCentro <= centro){
+                if(
+                    centroPagina <=
+                    centro
+                ){
 
                     paginaActual =
                         index + 1;
@@ -350,72 +712,219 @@ async function renderizarPagina(numeroPagina){
         );
 
 
-        currentPageElement.textContent =
+        paginaActiva =
             paginaActual;
+
+
+        if(currentPageElement){
+
+            currentPageElement.textContent =
+                paginaActual;
+
+        }
 
     }
 
 
-    /* ==================================================
-       PANTALLA COMPLETA
-       ================================================== */
+    // ==================================================
+    // ZOOM
+    // ==================================================
 
-    fullscreenButton.addEventListener(
-        "click",
-        () => {
+    /*
+     * IMPORTANTE:
+     *
+     * En esta primera etapa dejamos
+     * los botones funcionando con la
+     * estructura nueva.
+     *
+     * La optimización completa del zoom
+     * la hacemos en la siguiente etapa.
+     */
 
-            const visor =
-                document.querySelector(
-                    ".brochure-viewer"
-                );
+    if(zoomInButton){
+
+        zoomInButton.addEventListener(
+            "click",
+            () => {
+
+                if(
+                    zoom >=
+                    maxZoom
+                ){
+
+                    return;
+
+                }
 
 
-            if(!document.fullscreenElement){
+                zoom +=
+                    zoomStep;
 
-                visor.requestFullscreen()
-                    .catch(error => {
 
-                        console.error(
-                            "No se pudo activar pantalla completa:",
-                            error
-                        );
+                zoom =
+                    Math.round(
+                        zoom * 10
+                    ) / 10;
 
-                    });
+
+                actualizarZoom();
+
+
+                /*
+                 * Por ahora NO
+                 * reconstruimos las 33 páginas.
+                 *
+                 * La siguiente etapa será
+                 * optimizar completamente
+                 * este comportamiento.
+                 */
 
             }
+        );
 
-            else{
+    }
 
-                document.exitFullscreen();
+
+    if(zoomOutButton){
+
+        zoomOutButton.addEventListener(
+            "click",
+            () => {
+
+                if(
+                    zoom <=
+                    minZoom
+                ){
+
+                    return;
+
+                }
+
+
+                zoom -=
+                    zoomStep;
+
+
+                zoom =
+                    Math.round(
+                        zoom * 10
+                    ) / 10;
+
+
+                actualizarZoom();
 
             }
+        );
+
+    }
+
+
+    function actualizarZoom(){
+
+        if(zoomLevelElement){
+
+            zoomLevelElement.textContent =
+                Math.round(
+                    zoom * 100
+                ) + "%";
 
         }
-    );
+
+    }
 
 
-    /* ==================================================
-       ACTUALIZAR BOTÓN DE PANTALLA COMPLETA
-       ================================================== */
+    // ==================================================
+    // PANTALLA COMPLETA
+    // ==================================================
+
+    if(fullscreenButton){
+
+        fullscreenButton.addEventListener(
+            "click",
+            () => {
+
+                const visor =
+                    document.querySelector(
+                        ".brochure-viewer"
+                    );
+
+
+                if(!visor){
+
+                    return;
+
+                }
+
+
+                if(
+                    !document.fullscreenElement
+                ){
+
+                    visor
+                        .requestFullscreen()
+                        .catch(error => {
+
+                            console.error(
+                                "No se pudo activar pantalla completa:",
+                                error
+                            );
+
+                        });
+
+                }
+
+                else{
+
+                    document.exitFullscreen();
+
+                }
+
+            }
+        );
+
+    }
+
+
+    // ==================================================
+    // ACTUALIZAR TEXTO PANTALLA COMPLETA
+    // ==================================================
 
     document.addEventListener(
         "fullscreenchange",
         () => {
 
-            if(document.fullscreenElement){
+            if(!fullscreenButton){
 
-                fullscreenButton
-                    .querySelector("span")
-                    .textContent =
+                return;
+
+            }
+
+
+            const texto =
+                fullscreenButton.querySelector(
+                    "span"
+                );
+
+
+            if(!texto){
+
+                return;
+
+            }
+
+
+            if(
+                document.fullscreenElement
+            ){
+
+                texto.textContent =
                     "Salir de pantalla completa";
 
             }
 
             else{
 
-                fullscreenButton
-                    .querySelector("span")
-                    .textContent =
+                texto.textContent =
                     "Pantalla completa";
 
             }
@@ -424,14 +933,22 @@ async function renderizarPagina(numeroPagina){
     );
 
 
-    /* ==================================================
-       MENSAJE DE ERROR
-       ================================================== */
+    // ==================================================
+    // MENSAJE DE ERROR
+    // ==================================================
 
     function mostrarError(mensaje){
 
+        if(!pdfLoading){
+
+            return;
+
+        }
+
+
         pdfLoading.textContent =
             mensaje;
+
 
         pdfLoading.style.display =
             "block";
