@@ -218,21 +218,17 @@
    ================================================== */
 
 .pdf-page {
-    display: block;
 
-    margin: 0 auto 25px;
+    display: block;
 
     background: #fff;
 
-    box-shadow:
-        0 5px 20px rgba(0, 0, 0, 0.25);
+    margin: 0;
 
-    max-width: 100%;
+    max-width: none;
 
     transform-origin: top center;
 
-    transition:
-        width 0.2s ease;
 }
 
 
@@ -476,11 +472,11 @@ and (max-width: 1000px) {
 
     display: block;
 
-    width: 100%;
+    width: auto;
 
     height: auto;
 
-    max-width: 100%;
+    max-width: none;
 
     margin: 0;
 

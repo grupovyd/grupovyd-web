@@ -453,7 +453,8 @@ document.addEventListener("DOMContentLoaded", () => {
     // ==================================================
 
     async function renderizarPagina(
-        numeroPagina
+      numeroPagina,
+      forzar = false
     ){
 
         const datos =
@@ -472,9 +473,12 @@ document.addEventListener("DOMContentLoaded", () => {
          * no hacemos absolutamente nada.
          */
 
-        if(datos.renderizada){
+        if(
+             datos.renderizada &&
+             !forzar
+          ){
 
-            return;
+        return;
 
         }
 
@@ -726,111 +730,238 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-    // ==================================================
-    // ZOOM
-    // ==================================================
+// ==================================================
+// ZOOM OPTIMIZADO
+// ==================================================
+
+async function aplicarZoom(){
 
     /*
-     * IMPORTANTE:
-     *
-     * En esta primera etapa dejamos
-     * los botones funcionando con la
-     * estructura nueva.
-     *
-     * La optimización completa del zoom
-     * la hacemos en la siguiente etapa.
+     * Guardamos la página que el usuario está viendo
+     * para intentar mantener la misma posición.
      */
 
-    if(zoomInButton){
-
-        zoomInButton.addEventListener(
-            "click",
-            () => {
-
-                if(
-                    zoom >=
-                    maxZoom
-                ){
-
-                    return;
-
-                }
+    const paginaObjetivo =
+        paginaActiva;
 
 
-                zoom +=
-                    zoomStep;
+    /*
+     * Marcamos las páginas ya renderizadas
+     * para volver a procesarlas con la nueva escala.
+     */
 
+    paginas.forEach(datos => {
 
-                zoom =
-                    Math.round(
-                        zoom * 10
-                    ) / 10;
+        if(datos.renderizada){
 
-
-                actualizarZoom();
-
-
-                /*
-                 * Por ahora NO
-                 * reconstruimos las 33 páginas.
-                 *
-                 * La siguiente etapa será
-                 * optimizar completamente
-                 * este comportamiento.
-                 */
-
-            }
-        );
-
-    }
-
-
-    if(zoomOutButton){
-
-        zoomOutButton.addEventListener(
-            "click",
-            () => {
-
-                if(
-                    zoom <=
-                    minZoom
-                ){
-
-                    return;
-
-                }
-
-
-                zoom -=
-                    zoomStep;
-
-
-                zoom =
-                    Math.round(
-                        zoom * 10
-                    ) / 10;
-
-
-                actualizarZoom();
-
-            }
-        );
-
-    }
-
-
-    function actualizarZoom(){
-
-        if(zoomLevelElement){
-
-            zoomLevelElement.textContent =
-                Math.round(
-                    zoom * 100
-                ) + "%";
+            datos.renderizada = false;
 
         }
 
+    });
+
+
+    /*
+     * Actualizamos inmediatamente la estructura
+     * visual de las páginas.
+     *
+     * Esto evita que el visor se quede blanco.
+     */
+
+    paginas.forEach((datos, numeroPagina) => {
+
+        if(!datos.canvas){
+
+            return;
+
+        }
+
+
+        const anchoBase =
+            datos.canvas.clientWidth ||
+            datos.canvas.width /
+            Math.min(
+                window.devicePixelRatio || 1,
+                2
+            );
+
+
+        const nuevoAncho =
+            anchoBase *
+            zoom;
+
+
+        datos.shell.style.width =
+            `${nuevoAncho}px`;
+
+    });
+
+
+    /*
+     * Renderizamos primero la página activa.
+     */
+
+    await renderizarPagina(
+        paginaObjetivo,
+        true
+    );
+
+
+    /*
+     * Después actualizamos las páginas cercanas
+     * sin bloquear tanto la interfaz.
+     */
+
+    const paginasCercanas = [
+
+        paginaObjetivo - 1,
+        paginaObjetivo + 1,
+        paginaObjetivo - 2,
+        paginaObjetivo + 2
+
+    ];
+
+
+    for(
+        const numeroPagina
+        of paginasCercanas
+    ){
+
+        if(
+            numeroPagina < 1 ||
+            numeroPagina > pdfDocument.numPages
+        ){
+
+            continue;
+
+        }
+
+
+        await renderizarPagina(
+            numeroPagina,
+            true
+        );
+
+
+        /*
+         * Le damos oportunidad al navegador
+         * de actualizar la interfaz antes
+         * de continuar.
+         */
+
+        await new Promise(
+            resolve =>
+                requestAnimationFrame(resolve)
+        );
+
     }
+
+
+    /*
+     * El resto se actualizará cuando
+     * entre en la zona visible del visor.
+     */
+
+}
+
+
+// ==================================================
+// BOTÓN ZOOM +
+// ==================================================
+
+if(zoomInButton){
+
+    zoomInButton.addEventListener(
+        "click",
+        async () => {
+
+            if(
+                zoom >= maxZoom
+            ){
+
+                return;
+
+            }
+
+
+            zoom += zoomStep;
+
+
+            zoom =
+                Math.round(
+                    zoom * 10
+                ) / 10;
+
+
+            actualizarZoom();
+
+
+            await aplicarZoom();
+
+        }
+    );
+
+}
+
+
+// ==================================================
+// BOTÓN ZOOM -
+// ==================================================
+
+if(zoomOutButton){
+
+    zoomOutButton.addEventListener(
+        "click",
+        async () => {
+
+            if(
+                zoom <= minZoom
+            ){
+
+                return;
+
+            }
+
+
+            zoom -= zoomStep;
+
+
+            zoom =
+                Math.round(
+                    zoom * 10
+                ) / 10;
+
+
+            actualizarZoom();
+
+
+            await aplicarZoom();
+
+        }
+    );
+
+}
+
+
+// ==================================================
+// ACTUALIZAR INDICADOR
+// ==================================================
+
+function actualizarZoom(){
+
+    if(!zoomLevelElement){
+
+        return;
+
+    }
+
+
+    zoomLevelElement.textContent =
+        Math.round(
+            zoom * 100
+        ) + "%";
+
+}
 
 
     // ==================================================
