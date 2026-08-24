@@ -643,8 +643,29 @@ document.addEventListener("componentesListos", () => {
             );
 
 
-            const resultado =
-            await respuesta.json();
+            const textoRespuesta = await respuesta.text();
+
+            console.log("RESPUESTA GOOGLE APPS SCRIPT:");
+            console.log(textoRespuesta);
+
+            let resultado;
+
+            try {
+
+               resultado = JSON.parse(textoRespuesta);
+
+            } catch(error) {
+
+               console.error(
+               "La respuesta de Google no es JSON válido:",
+               textoRespuesta
+               );
+
+               throw new Error(
+               "Respuesta inválida del servidor"
+               );
+
+            }
 
 
             if(!resultado.success){
