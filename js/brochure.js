@@ -379,35 +379,99 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 //==================================================
-// MODAL DE COTIZACIÓN
+// FUNCIONALIDAD DEL BROCHURE
 //==================================================
 
 document.addEventListener("componentesListos", () => {
 
-    const botonCotizacion = document.getElementById("abrirModal");
-    const modal = document.getElementById("modalCotizacion");
-    const cerrarModal = document.querySelector(".cerrar-modal");
+    //==================================================
+    // ELEMENTOS DEL MODAL
+    //==================================================
 
-    if (!botonCotizacion) {
-        console.warn("No se encontró el botón #abrirModal");
+    const botonModal =
+    document.getElementById("abrirModal");
+
+    const modal =
+    document.getElementById("modalCotizacion");
+
+    const modalExito =
+    document.getElementById("modalExito");
+
+    const cerrarModal =
+    document.querySelector(".cerrar-modal");
+
+    const contenidoModal =
+    document.querySelector(".modal-contenido");
+
+    const formulario =
+    document.getElementById("formModal");
+
+    const btnNuevoFormulario =
+    document.getElementById("nuevoFormulario");
+
+    const btnCerrarExito =
+    document.getElementById("cerrarExito");
+
+    const btnWhatsappExito =
+    document.getElementById("btnWhatsappExito");
+
+
+    //==================================================
+    // VALIDACIÓN DE ELEMENTOS
+    //==================================================
+
+    if(!botonModal){
+
+        console.warn(
+            "BROCHURE: No se encontró #abrirModal"
+        );
+
         return;
+
     }
 
-    if (!modal) {
-        console.warn("No se encontró el modal #modalCotizacion");
+    if(!modal){
+
+        console.warn(
+            "BROCHURE: No se encontró #modalCotizacion"
+        );
+
         return;
+
+    }
+
+    if(!formulario){
+
+        console.warn(
+            "BROCHURE: No se encontró #formModal"
+        );
+
+        return;
+
     }
 
 
     //==================================================
-    // ABRIR MODAL
+    // ABRIR MODAL DE COTIZACIÓN
     //==================================================
 
-    botonCotizacion.addEventListener("click", function(e) {
+    botonModal.addEventListener("click", function(e){
 
         e.preventDefault();
 
+        formulario.reset();
+
         modal.style.display = "flex";
+
+        requestAnimationFrame(() => {
+
+            if(contenidoModal){
+
+                contenidoModal.scrollTop = 0;
+
+            }
+
+        });
 
     });
 
@@ -416,9 +480,11 @@ document.addEventListener("componentesListos", () => {
     // CERRAR MODAL
     //==================================================
 
-    if (cerrarModal) {
+    if(cerrarModal){
 
-        cerrarModal.addEventListener("click", function() {
+        cerrarModal.addEventListener("click", function(){
+
+            formulario.reset();
 
             modal.style.display = "none";
 
@@ -431,9 +497,11 @@ document.addEventListener("componentesListos", () => {
     // CERRAR AL HACER CLICK FUERA
     //==================================================
 
-    modal.addEventListener("click", function(e) {
+    window.addEventListener("click", function(e){
 
-        if (e.target === modal) {
+        if(e.target === modal){
+
+            formulario.reset();
 
             modal.style.display = "none";
 
@@ -446,14 +514,275 @@ document.addEventListener("componentesListos", () => {
     // CERRAR CON ESC
     //==================================================
 
-    document.addEventListener("keydown", function(e) {
+    document.addEventListener("keydown", function(e){
 
-        if (e.key === "Escape") {
+        if(e.key !== "Escape") return;
+
+
+        if(modal.style.display === "flex"){
+
+            formulario.reset();
 
             modal.style.display = "none";
 
         }
 
+
+        if(
+            modalExito &&
+            modalExito.style.display === "flex"
+        ){
+
+            modalExito.style.display = "none";
+
+            formulario.reset();
+
+        }
+
     });
+
+
+    //==================================================
+    // WEB APP - SOLICITUDES
+    //==================================================
+
+    const URL_WEB_APP =
+    "https://script.google.com/macros/s/AKfycbw2cEEIOR-9rktmyHtfbpIEsQJRybcIZoa7YURX-MAoGTzVR_vHnDBoHHGXiMXKJ2nslQ/exec";
+
+
+    //==================================================
+    // FORMULARIO ACTIVO
+    //==================================================
+
+    let formularioActivo = null;
+
+
+    //==================================================
+    // ENVÍO DEL FORMULARIO
+    //==================================================
+
+    formulario.addEventListener("submit", async function(e){
+
+        e.preventDefault();
+
+        formularioActivo = formulario;
+
+
+        const botonEnviar =
+        formulario.querySelector(
+            'button[type="submit"]'
+        );
+
+
+        const textoOriginalBoton =
+        botonEnviar.textContent;
+
+
+        //==================================================
+        // DATOS
+        //==================================================
+
+        const datos = {
+
+            origen: "BROCHURE",
+
+            nombre:
+            formulario.elements["nombre"].value,
+
+            empresa:
+            formulario.elements["empresa"].value,
+
+            ruc:
+            formulario.elements["ruc"].value,
+
+            correo:
+            formulario.elements["correo"].value,
+
+            telefono:
+            formulario.elements["telefono"].value,
+
+            feria:
+            formulario.elements["feria"].value,
+
+            tipoStand:
+            formulario.elements["tipoStand"].value,
+
+            medidas:
+            formulario.elements["medidas"].value,
+
+            presupuesto:
+            formulario.elements["presupuesto"].value,
+
+            comentarios:
+            formulario.elements["comentarios"].value,
+
+            website:
+            formulario.elements["website"].value
+
+        };
+
+
+        //==================================================
+        // ESTADO DE ENVÍO
+        //==================================================
+
+        botonEnviar.disabled = true;
+
+        botonEnviar.textContent = "Enviando...";
+
+
+        try{
+
+            const respuesta = await fetch(
+                URL_WEB_APP,
+                {
+                    method: "POST",
+                    body: JSON.stringify(datos),
+                    redirect: "follow"
+                }
+            );
+
+
+            const resultado =
+            await respuesta.json();
+
+
+            if(!resultado.success){
+
+                throw new Error(
+                    resultado.message ||
+                    "No se pudo registrar la solicitud"
+                );
+
+            }
+
+
+            //==================================================
+            // ENVÍO CORRECTO
+            //==================================================
+
+            modal.style.display = "none";
+
+            if(modalExito){
+
+                modalExito.style.display = "flex";
+
+            }
+
+
+        }catch(error){
+
+            console.error(
+                "Error enviando solicitud:",
+                error
+            );
+
+
+            alert(
+                "No pudimos enviar tu solicitud en este momento. " +
+                "Por favor, inténtalo nuevamente."
+            );
+
+
+        }finally{
+
+            botonEnviar.disabled = false;
+
+            botonEnviar.textContent =
+            textoOriginalBoton;
+
+        }
+
+    });
+
+
+    //==================================================
+    // BOTÓN: ENVIAR OTRA SOLICITUD
+    //==================================================
+
+    if(btnNuevoFormulario){
+
+        btnNuevoFormulario.addEventListener(
+            "click",
+            function(){
+
+                if(modalExito){
+
+                    modalExito.style.display =
+                    "none";
+
+                }
+
+                formulario.reset();
+
+                modal.style.display = "flex";
+
+
+                requestAnimationFrame(() => {
+
+                    if(contenidoModal){
+
+                        contenidoModal.scrollTop = 0;
+
+                    }
+
+                });
+
+            }
+        );
+
+    }
+
+
+    //==================================================
+    // BOTÓN: CONTINUAR NAVEGANDO
+    //==================================================
+
+    if(btnCerrarExito){
+
+        btnCerrarExito.addEventListener(
+            "click",
+            function(){
+
+                if(modalExito){
+
+                    modalExito.style.display =
+                    "none";
+
+                }
+
+                formulario.reset();
+
+            }
+        );
+
+    }
+
+
+    //==================================================
+    // BOTÓN: WHATSAPP DESDE ÉXITO
+    //==================================================
+
+    if(btnWhatsappExito){
+
+        btnWhatsappExito.addEventListener(
+            "click",
+            function(){
+
+                if(modalExito){
+
+                    modalExito.style.display =
+                    "none";
+
+                }
+
+                formulario.reset();
+
+                modal.style.display = "none";
+
+            }
+        );
+
+    }
 
 });
