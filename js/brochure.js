@@ -452,11 +452,235 @@ document.addEventListener("DOMContentLoaded", () => {
     // RENDERIZAR UNA PÁGINA
     // ==================================================
 
-    async function renderizarPagina(
-      numeroPagina,
-      forzar = false
+async function renderizarPagina(
+    numeroPagina,
+    forzar = false
+){
+
+    const datos =
+        paginas.get(numeroPagina);
+
+    if(!datos){
+
+        return;
+
+    }
+
+
+    if(
+        datos.renderizada &&
+        !forzar
     ){
 
+        return;
+
+    }
+
+
+    if(datos.renderizando){
+
+        return;
+
+    }
+
+
+    datos.renderizando = true;
+
+
+    try{
+
+        const page =
+            await pdfDocument.getPage(
+                numeroPagina
+            );
+
+
+        /*
+         * Tamaño original de la página.
+         */
+
+        const viewportBase =
+            page.getViewport({
+                scale: 1
+            });
+
+
+        /*
+         * Escala final.
+         */
+
+        const escalaFinal =
+            escalaBase * zoom;
+
+
+        const viewport =
+            page.getViewport({
+                scale: escalaFinal
+            });
+
+
+        /*
+         * ==================================================
+         * ACTUALIZAR TAMAÑO REAL DEL SHELL
+         * ==================================================
+         *
+         * El contenedor y el canvas deben tener
+         * exactamente la misma proporción.
+         */
+
+        datos.shell.style.width =
+            `${viewport.width}px`;
+
+        datos.shell.style.height =
+            `${viewport.height}px`;
+
+
+        /*
+         * Permitimos que el visor pueda contener
+         * páginas más grandes cuando hacemos zoom.
+         */
+
+        datos.shell.style.maxWidth =
+            "none";
+
+
+        /*
+         * Eliminamos el canvas anterior.
+         */
+
+        datos.shell.innerHTML = "";
+
+
+        /*
+         * ==================================================
+         * CREAR CANVAS
+         * ==================================================
+         */
+
+        const canvas =
+            document.createElement(
+                "canvas"
+            );
+
+
+        canvas.className =
+            "pdf-page";
+
+
+        const context =
+            canvas.getContext(
+                "2d",
+                {
+                    alpha: false
+                }
+            );
+
+
+        /*
+         * Resolución interna.
+         *
+         * Limitamos a 1.5 para evitar que
+         * los dispositivos móviles tengan
+         * que procesar demasiados píxeles.
+         */
+
+        const pixelRatio =
+            Math.min(
+                window.devicePixelRatio || 1,
+                1.5
+            );
+
+
+        canvas.width =
+            Math.floor(
+                viewport.width *
+                pixelRatio
+            );
+
+
+        canvas.height =
+            Math.floor(
+                viewport.height *
+                pixelRatio
+            );
+
+
+        /*
+         * Tamaño visual exacto.
+         */
+
+        canvas.style.width =
+            `${viewport.width}px`;
+
+        canvas.style.height =
+            `${viewport.height}px`;
+
+
+        canvas.dataset.page =
+            numeroPagina;
+
+
+        datos.shell.appendChild(
+            canvas
+        );
+
+
+        datos.canvas =
+            canvas;
+
+
+        /*
+         * ==================================================
+         * RENDER
+         * ==================================================
+         */
+
+        await page.render({
+
+            canvasContext:
+                context,
+
+            viewport:
+                viewport,
+
+            transform:
+                pixelRatio !== 1
+                    ? [
+                        pixelRatio,
+                        0,
+                        0,
+                        pixelRatio,
+                        0,
+                        0
+                    ]
+                    : null
+
+        }).promise;
+
+
+        datos.renderizada =
+            true;
+
+
+    }
+
+    catch(error){
+
+        console.error(
+            `Error renderizando página ${numeroPagina}:`,
+            error
+        );
+
+    }
+
+    finally{
+
+        datos.renderizando =
+            false;
+
+    }
+
+}
         const datos =
             paginas.get(numeroPagina);
 
@@ -729,138 +953,103 @@ document.addEventListener("DOMContentLoaded", () => {
 
     }
 
-
+    // ==================================================
+// ZOOM
 // ==================================================
-// ZOOM OPTIMIZADO
-// ==================================================
 
-async function aplicarZoom(){
+async function cambiarZoom(nuevoZoom){
 
     /*
-     * Guardamos la página que el usuario está viendo
-     * para intentar mantener la misma posición.
+     * Evitamos valores fuera del rango.
      */
 
-    const paginaObjetivo =
+    nuevoZoom =
+        Math.max(
+            minZoom,
+            Math.min(
+                maxZoom,
+                nuevoZoom
+            )
+        );
+
+
+    /*
+     * Redondeamos.
+     */
+
+    zoom =
+        Math.round(
+            nuevoZoom * 10
+        ) / 10;
+
+
+    actualizarZoom();
+
+
+    /*
+     * La página que el usuario está leyendo
+     * es la única que necesitamos recalcular
+     * inmediatamente.
+     */
+
+    const pagina =
         paginaActiva;
 
 
     /*
-     * Marcamos las páginas ya renderizadas
-     * para volver a procesarlas con la nueva escala.
+     * Evitamos que el navegador se bloquee
+     * mientras cambia el tamaño.
      */
 
-    paginas.forEach(datos => {
+    await new Promise(
+        resolve =>
+            requestAnimationFrame(resolve)
+    );
 
-        if(datos.renderizada){
-
-            datos.renderizada = false;
-
-        }
-
-    });
-
-
-    /*
-     * Actualizamos inmediatamente la estructura
-     * visual de las páginas.
-     *
-     * Esto evita que el visor se quede blanco.
-     */
-
-    paginas.forEach((datos, numeroPagina) => {
-
-        if(!datos.canvas){
-
-            return;
-
-        }
-
-
-        const anchoBase =
-            datos.canvas.clientWidth ||
-            datos.canvas.width /
-            Math.min(
-                window.devicePixelRatio || 1,
-                2
-            );
-
-
-        const nuevoAncho =
-            anchoBase *
-            zoom;
-
-
-        datos.shell.style.width =
-            `${nuevoAncho}px`;
-
-    });
-
-
-    /*
-     * Renderizamos primero la página activa.
-     */
 
     await renderizarPagina(
-        paginaObjetivo,
+        pagina,
         true
     );
 
 
     /*
-     * Después actualizamos las páginas cercanas
-     * sin bloquear tanto la interfaz.
+     * Actualizamos únicamente las páginas
+     * inmediatamente cercanas.
+     *
+     * No renderizamos las 33.
      */
 
-    const paginasCercanas = [
+    const paginaAnterior =
+        pagina - 1;
 
-        paginaObjetivo - 1,
-        paginaObjetivo + 1,
-        paginaObjetivo - 2,
-        paginaObjetivo + 2
-
-    ];
+    const paginaSiguiente =
+        pagina + 1;
 
 
-    for(
-        const numeroPagina
-        of paginasCercanas
+    if(
+        paginaAnterior >= 1
     ){
 
-        if(
-            numeroPagina < 1 ||
-            numeroPagina > pdfDocument.numPages
-        ){
-
-            continue;
-
-        }
-
-
-        await renderizarPagina(
-            numeroPagina,
+        renderizarPagina(
+            paginaAnterior,
             true
-        );
-
-
-        /*
-         * Le damos oportunidad al navegador
-         * de actualizar la interfaz antes
-         * de continuar.
-         */
-
-        await new Promise(
-            resolve =>
-                requestAnimationFrame(resolve)
         );
 
     }
 
 
-    /*
-     * El resto se actualizará cuando
-     * entre en la zona visible del visor.
-     */
+    if(
+        paginaSiguiente <=
+        pdfDocument.numPages
+    ){
+
+        renderizarPagina(
+            paginaSiguiente,
+            true
+        );
+
+    }
 
 }
 
@@ -873,7 +1062,7 @@ if(zoomInButton){
 
     zoomInButton.addEventListener(
         "click",
-        async () => {
+        () => {
 
             if(
                 zoom >= maxZoom
@@ -884,19 +1073,9 @@ if(zoomInButton){
             }
 
 
-            zoom += zoomStep;
-
-
-            zoom =
-                Math.round(
-                    zoom * 10
-                ) / 10;
-
-
-            actualizarZoom();
-
-
-            await aplicarZoom();
+            cambiarZoom(
+                zoom + zoomStep
+            );
 
         }
     );
@@ -912,7 +1091,7 @@ if(zoomOutButton){
 
     zoomOutButton.addEventListener(
         "click",
-        async () => {
+        () => {
 
             if(
                 zoom <= minZoom
@@ -923,19 +1102,9 @@ if(zoomOutButton){
             }
 
 
-            zoom -= zoomStep;
-
-
-            zoom =
-                Math.round(
-                    zoom * 10
-                ) / 10;
-
-
-            actualizarZoom();
-
-
-            await aplicarZoom();
+            cambiarZoom(
+                zoom - zoomStep
+            );
 
         }
     );
@@ -962,7 +1131,6 @@ function actualizarZoom(){
         ) + "%";
 
 }
-
 
     // ==================================================
     // PANTALLA COMPLETA
