@@ -230,23 +230,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function calcularEscalaBase(page){
 
-        const viewportBase =
-            page.getViewport({
-                scale: 1
-            });
+    const viewportBase =
+        page.getViewport({
+            scale: 1
+        });
 
 
-        const anchoDisponible =
-            Math.max(
-                pdfViewer.clientWidth - 40,
-                100
-            );
+    /*
+     * El visor puede ser mucho más ancho
+     * que la hoja del brochure.
+     *
+     * La hoja tiene un ancho máximo
+     * de 900px, por lo que la escala
+     * debe calcularse respecto a ese
+     * mismo límite.
+     */
+
+    const anchoDisponible =
+        Math.max(
+            pdfViewer.clientWidth - 40,
+            100
+        );
 
 
-        return anchoDisponible /
-               viewportBase.width;
+    const anchoPagina =
+        Math.min(
+            anchoDisponible,
+            900
+        );
 
-    }
+
+    return anchoPagina /
+           viewportBase.width;
+
+}
 
 
     // ==================================================
