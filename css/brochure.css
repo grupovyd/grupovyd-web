@@ -183,7 +183,7 @@
     background: #525659;
 
     overflow-y: auto;
-    overflow-x: hidden;
+    overflow-x: auto;
 
     display: flex;
     flex-direction: column;
