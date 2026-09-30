@@ -228,23 +228,13 @@ document.addEventListener("DOMContentLoaded", () => {
     // CALCULAR ESCALA BASE
     // ==================================================
 
-    function calcularEscalaBase(page){
+function calcularEscalaBase(page){
 
     const viewportBase =
         page.getViewport({
             scale: 1
         });
 
-
-    /*
-     * El visor puede ser mucho más ancho
-     * que la hoja del brochure.
-     *
-     * La hoja tiene un ancho máximo
-     * de 900px, por lo que la escala
-     * debe calcularse respecto a ese
-     * mismo límite.
-     */
 
     const anchoDisponible =
         Math.max(
@@ -253,14 +243,7 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
 
-    const anchoPagina =
-        Math.min(
-            anchoDisponible,
-            900
-        );
-
-
-    return anchoPagina /
+    return anchoDisponible /
            viewportBase.width;
 
 }
