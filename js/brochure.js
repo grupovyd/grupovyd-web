@@ -448,10 +448,6 @@ function calcularEscalaBase(page){
     }
 
 
-    // ==================================================
-    // RENDERIZAR UNA PÁGINA
-    // ==================================================
-
 async function renderizarPagina(
     numeroPagina,
     forzar = false
@@ -461,9 +457,7 @@ async function renderizarPagina(
         paginas.get(numeroPagina);
 
     if(!datos){
-
         return;
-
     }
 
 
@@ -471,16 +465,12 @@ async function renderizarPagina(
         datos.renderizada &&
         !forzar
     ){
-
         return;
-
     }
 
 
     if(datos.renderizando){
-
         return;
-
     }
 
 
@@ -496,17 +486,9 @@ async function renderizarPagina(
 
 
         /*
-         * Tamaño original de la página.
-         */
-
-        const viewportBase =
-            page.getViewport({
-                scale: 1
-            });
-
-
-        /*
-         * Escala final.
+         * ==============================================
+         * CALCULAR ESCALA
+         * ==============================================
          */
 
         const escalaFinal =
@@ -520,55 +502,26 @@ async function renderizarPagina(
 
 
         /*
-         * ==================================================
-         * ACTUALIZAR TAMAÑO REAL DEL SHELL
-         * ==================================================
+         * ==============================================
+         * CREAR CANVAS NUEVO
          *
-         * El contenedor y el canvas deben tener
-         * exactamente la misma proporción.
+         * IMPORTANTE:
+         * NO eliminamos el canvas actual.
+         * La página actual permanece visible mientras
+         * PDF.js prepara la nueva versión.
+         * ==============================================
          */
 
-        datos.shell.style.width =
-            `${viewport.width}px`;
-
-        datos.shell.style.height =
-            `${viewport.height}px`;
+        const nuevoCanvas =
+            document.createElement("canvas");
 
 
-        /*
-         * Permitimos que el visor pueda contener
-         * páginas más grandes cuando hacemos zoom.
-         */
-
-        datos.shell.style.maxWidth =
-            "none";
-
-
-        /*
-         * Eliminamos el canvas anterior.
-         */
-
-        datos.shell.innerHTML = "";
-
-
-        /*
-         * ==================================================
-         * CREAR CANVAS
-         * ==================================================
-         */
-
-        const canvas =
-            document.createElement(
-                "canvas"
-            );
-
-
-        canvas.className =
+        nuevoCanvas.className =
             "pdf-page";
 
 
-        const context =
-            canvas.getContext(
+        const nuevoContext =
+            nuevoCanvas.getContext(
                 "2d",
                 {
                     alpha: false
@@ -577,11 +530,9 @@ async function renderizarPagina(
 
 
         /*
-         * Resolución interna.
-         *
-         * Limitamos a 1.5 para evitar que
-         * los dispositivos móviles tengan
-         * que procesar demasiados píxeles.
+         * ==============================================
+         * RESOLUCIÓN INTERNA
+         * ==============================================
          */
 
         const pixelRatio =
@@ -591,54 +542,42 @@ async function renderizarPagina(
             );
 
 
-        canvas.width =
+        nuevoCanvas.width =
             Math.floor(
                 viewport.width *
                 pixelRatio
             );
 
 
-        canvas.height =
+        nuevoCanvas.height =
             Math.floor(
                 viewport.height *
                 pixelRatio
             );
 
 
-        /*
-         * Tamaño visual exacto.
-         */
-
-        canvas.style.width =
+        nuevoCanvas.style.width =
             `${viewport.width}px`;
 
-        canvas.style.height =
+
+        nuevoCanvas.style.height =
             `${viewport.height}px`;
 
 
-        canvas.dataset.page =
+        nuevoCanvas.dataset.page =
             numeroPagina;
 
 
-        datos.shell.appendChild(
-            canvas
-        );
-
-
-        datos.canvas =
-            canvas;
-
-
         /*
-         * ==================================================
-         * RENDER
-         * ==================================================
+         * ==============================================
+         * RENDERIZAR NUEVA VERSIÓN
+         * ==============================================
          */
 
         await page.render({
 
             canvasContext:
-                context,
+                nuevoContext,
 
             viewport:
                 viewport,
@@ -658,12 +597,49 @@ async function renderizarPagina(
         }).promise;
 
 
+        /*
+         * ==============================================
+         * CAMBIO FINAL
+         *
+         * Solo cuando el canvas nuevo está terminado
+         * reemplazamos el anterior.
+         * ==============================================
+         */
+
+        datos.shell.style.width =
+            `${viewport.width}px`;
+
+
+        datos.shell.style.height =
+            `${viewport.height}px`;
+
+
+        datos.shell.style.maxWidth =
+            "none";
+
+
+        datos.shell
+            .querySelectorAll("canvas")
+            .forEach(canvas => {
+
+                canvas.remove();
+
+            });
+
+
+        datos.shell.appendChild(
+            nuevoCanvas
+        );
+
+
+        datos.canvas =
+            nuevoCanvas;
+
+
         datos.renderizada =
             true;
 
-
     }
-
     catch(error){
 
         console.error(
@@ -672,7 +648,6 @@ async function renderizarPagina(
         );
 
     }
-
     finally{
 
         datos.renderizando =
@@ -757,14 +732,15 @@ async function renderizarPagina(
 
     }
 
-    // ==================================================
-// ZOOM
-// ==================================================
+let zoomTimer = null;
 
-async function cambiarZoom(nuevoZoom){
+
+function cambiarZoom(nuevoZoom){
 
     /*
-     * Evitamos valores fuera del rango.
+     * ==============================================
+     * LIMITAR ZOOM
+     * ==============================================
      */
 
     nuevoZoom =
@@ -778,7 +754,9 @@ async function cambiarZoom(nuevoZoom){
 
 
     /*
-     * Redondeamos.
+     * ==============================================
+     * REDONDEAR
+     * ==============================================
      */
 
     zoom =
@@ -787,76 +765,54 @@ async function cambiarZoom(nuevoZoom){
         ) / 10;
 
 
+    /*
+     * Actualizar indicador
+     */
+
     actualizarZoom();
 
 
     /*
-     * La página que el usuario está leyendo
-     * es la única que necesitamos recalcular
-     * inmediatamente.
-     */
-
-    const pagina =
-        paginaActiva;
-
-
-    /*
-     * Evitamos que el navegador se bloquee
-     * mientras cambia el tamaño.
-     */
-
-    await new Promise(
-        resolve =>
-            requestAnimationFrame(resolve)
-    );
-
-
-    await renderizarPagina(
-        pagina,
-        true
-    );
-
-
-    /*
-     * Actualizamos únicamente las páginas
-     * inmediatamente cercanas.
+     * ==============================================
+     * CANCELAR RENDER PROGRAMADO ANTERIOR
+     * ==============================================
      *
-     * No renderizamos las 33.
+     * Si el usuario pulsa rápidamente:
+     *
+     * + + +
+     *
+     * esperamos un momento y utilizamos solamente
+     * el último nivel solicitado.
      */
 
-    const paginaAnterior =
-        pagina - 1;
-
-    const paginaSiguiente =
-        pagina + 1;
+    clearTimeout(
+        zoomTimer
+    );
 
 
-    if(
-        paginaAnterior >= 1
-    ){
+    zoomTimer =
+        setTimeout(
+            () => {
 
-        renderizarPagina(
-            paginaAnterior,
-            true
+                const pagina =
+                    paginaActiva;
+
+
+                if(!pagina){
+                    return;
+                }
+
+
+                renderizarPagina(
+                    pagina,
+                    true
+                );
+
+            },
+            120
         );
-
-    }
-
-
-    if(
-        paginaSiguiente <=
-        pdfDocument.numPages
-    ){
-
-        renderizarPagina(
-            paginaSiguiente,
-            true
-        );
-
-    }
 
 }
-
 
 // ==================================================
 // BOTÓN ZOOM +
